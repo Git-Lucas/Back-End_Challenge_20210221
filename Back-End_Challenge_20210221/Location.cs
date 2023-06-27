@@ -1,14 +1,11 @@
 ﻿using Newtonsoft.Json;
 
-public partial class Location
+public class Location
 {
-    [JsonProperty("id")]
     public long Id { get; set; }
 
-    [JsonProperty("url")]
     public Uri Url { get; set; }
 
-    [JsonProperty("name")]
     public string Name { get; set; }
 
     [JsonProperty("country_code")]

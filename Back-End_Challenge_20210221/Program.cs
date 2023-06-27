@@ -31,22 +31,15 @@ app.MapControllers();
 var _httpClient = new HttpClient
 {
     BaseAddress = new Uri("https://ll.thespacedevs.com/2.0.0/")
-    //BaseAddress = new Uri("https://jsonplaceholder.typicode.com")
 };
 
 app.MapGet("", async () =>
 {
-    var response = await _httpClient.GetAsync("launch/e3df2ecd-c239-472f-95e4-2b89b4f75800");
+    var response = await _httpClient.GetAsync("launch");
     var jsonString = await response.Content.ReadAsStringAsync();
-    var launch = JsonConvert.DeserializeObject<Launch>(jsonString);
+    var launchs = JsonConvert.DeserializeObject<Launch[]>(jsonString);
 
-    return Results.Ok(launch);
-
-    //var response = await _httpClient.GetAsync("users/1");
-    //var jsonString = await response.Content.ReadAsStringAsync();
-    //var users = JsonConvert.DeserializeObject<User>(jsonString);
-
-    //return Results.Ok(users);
+    return Results.Ok(launchs);
 });
 
 app.Run();
