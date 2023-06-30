@@ -1,4 +1,4 @@
-﻿namespace Back_End_Challenge_20210221.Models.Enums
+﻿namespace Back_End_Challenge_20210221.Domain.Models.Enums
 {
     public enum Import_Status
     {

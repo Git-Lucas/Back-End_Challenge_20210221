@@ -1,15 +1,23 @@
+using Back_End_Challenge_20210221.Domain.Data;
+using Back_End_Challenge_20210221.Infra.Cron;
+using Back_End_Challenge_20210221.Infra.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Web;
-using Newtonsoft.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+builder.Services.AddDbContext<EfSqlServerAdapter>();
+
+builder.Services.AddScoped<ILaunchData, LaunchDataSqlServer>();
+//builder.Services.AddScoped<ICronService, CronService>();
+
+builder.Services.AddHostedService<CronService>();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -28,18 +36,9 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-var _httpClient = new HttpClient
+app.MapGet("/", () =>
 {
-    BaseAddress = new Uri("https://ll.thespacedevs.com/2.0.0/")
-};
-
-app.MapGet("", async () =>
-{
-    var response = await _httpClient.GetAsync("launch");
-    var jsonString = await response.Content.ReadAsStringAsync();
-    var launchs = JsonConvert.DeserializeObject<Launch[]>(jsonString);
-
-    return Results.Ok(launchs);
+    return Results.Ok("REST Back-end Challenge 20201209 Running");
 });
 
 app.Run();
