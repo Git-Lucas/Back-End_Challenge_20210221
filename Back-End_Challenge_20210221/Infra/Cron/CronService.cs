@@ -23,9 +23,10 @@ namespace Back_End_Challenge_20210221.Infra.Cron
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            ImportRange = new TimeSpan(02, 21, 00) - DateTime.UtcNow.TimeOfDay;
+            ImportRange = new TimeSpan(23, 19, 00) - DateTime.UtcNow.TimeOfDay;
             _logger.LogInformation($"StartAsync {DateTime.UtcNow}");
-            Timer = new Timer(ImportData, null, ImportRange, TimeSpan.FromSeconds(30));
+            //Timer = new Timer(ImportData, null, ImportRange, TimeSpan.FromSeconds(5));
+            Timer = new Timer(ImportData, null, TimeSpan.FromDays(1), TimeSpan.FromMinutes(1));
             return Task.CompletedTask;
         }
 
@@ -57,7 +58,7 @@ namespace Back_End_Challenge_20210221.Infra.Cron
                 _logger.LogInformation($"Importados 100 registros! {DateTime.Now}");
 
                 Skip += 100;
-                if (Skip == 2000)
+                if (Skip == 200)
                     await StopAsync(new CancellationToken());
             }
         }

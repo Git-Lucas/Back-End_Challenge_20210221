@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Back_End_Challenge_20210221.Infra.Controllers
 {
-    [ApiController]
     [Route("launch")]
+    [ApiController]
     public class LaunchController : ControllerBase
     {
         private readonly ILaunchData _launchData;
@@ -22,7 +22,7 @@ namespace Back_End_Challenge_20210221.Infra.Controllers
                 var result = await _launchData.GetAllAsync(0, 10);
                 return Ok(result);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -48,6 +48,20 @@ namespace Back_End_Challenge_20210221.Infra.Controllers
             try
             {
                 await _launchData.DeleteAsync(id);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteAllAsync()
+        {
+            try
+            {
+                await _launchData.DeleteAllAsync();
                 return Ok();
             }
             catch (Exception ex)

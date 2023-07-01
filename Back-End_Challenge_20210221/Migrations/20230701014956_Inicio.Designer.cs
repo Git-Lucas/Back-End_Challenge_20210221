@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Back_End_Challenge_20210221.Migrations
 {
     [DbContext(typeof(EfSqlServerAdapter))]
-    [Migration("20230630014804_Inicio")]
+    [Migration("20230701014956_Inicio")]
     partial class Inicio
     {
         /// <inheritdoc />
@@ -49,7 +49,7 @@ namespace Back_End_Challenge_20210221.Migrations
 
                     b.HasIndex("ProgramId");
 
-                    b.ToTable("Agency");
+                    b.ToTable("Agencies");
                 });
 
             modelBuilder.Entity("Back_End_Challenge_20210221.Domain.Models.Configuration", b =>
@@ -80,7 +80,7 @@ namespace Back_End_Challenge_20210221.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Configuration");
+                    b.ToTable("Configurations");
                 });
 
             modelBuilder.Entity("Back_End_Challenge_20210221.Domain.Models.Launch", b =>
@@ -195,7 +195,7 @@ namespace Back_End_Challenge_20210221.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("LaunchServiceProvider");
+                    b.ToTable("LaunchServiceProviders");
                 });
 
             modelBuilder.Entity("Back_End_Challenge_20210221.Domain.Models.Location", b =>
@@ -226,7 +226,7 @@ namespace Back_End_Challenge_20210221.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Location");
+                    b.ToTable("Locations");
                 });
 
             modelBuilder.Entity("Back_End_Challenge_20210221.Domain.Models.Mission", b =>
@@ -259,16 +259,13 @@ namespace Back_End_Challenge_20210221.Migrations
 
                     b.HasIndex("OrbitId");
 
-                    b.ToTable("Mission");
+                    b.ToTable("Missions");
                 });
 
             modelBuilder.Entity("Back_End_Challenge_20210221.Domain.Models.Orbit", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<string>("Abbrev")
                         .HasColumnType("nvarchar(max)");
@@ -278,7 +275,7 @@ namespace Back_End_Challenge_20210221.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Orbit");
+                    b.ToTable("Orbits");
                 });
 
             modelBuilder.Entity("Back_End_Challenge_20210221.Domain.Models.Pad", b =>
@@ -326,7 +323,7 @@ namespace Back_End_Challenge_20210221.Migrations
 
                     b.HasIndex("LocationId");
 
-                    b.ToTable("Pad");
+                    b.ToTable("Pads");
                 });
 
             modelBuilder.Entity("Back_End_Challenge_20210221.Domain.Models.Program", b =>
@@ -368,7 +365,7 @@ namespace Back_End_Challenge_20210221.Migrations
 
                     b.HasIndex("LaunchId");
 
-                    b.ToTable("Program");
+                    b.ToTable("Programs");
                 });
 
             modelBuilder.Entity("Back_End_Challenge_20210221.Domain.Models.Rocket", b =>
@@ -386,7 +383,7 @@ namespace Back_End_Challenge_20210221.Migrations
 
                     b.HasIndex("ConfigurationId");
 
-                    b.ToTable("Rocket");
+                    b.ToTable("Rockets");
                 });
 
             modelBuilder.Entity("Back_End_Challenge_20210221.Domain.Models.Status", b =>

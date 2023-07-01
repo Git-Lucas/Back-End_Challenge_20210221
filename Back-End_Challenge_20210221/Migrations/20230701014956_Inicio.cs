@@ -12,7 +12,7 @@ namespace Back_End_Challenge_20210221.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Configuration",
+                name: "Configurations",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false),
@@ -25,11 +25,11 @@ namespace Back_End_Challenge_20210221.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Configuration", x => x.Id);
+                    table.PrimaryKey("PK_Configurations", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "LaunchServiceProvider",
+                name: "LaunchServiceProviders",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false),
@@ -39,11 +39,11 @@ namespace Back_End_Challenge_20210221.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_LaunchServiceProvider", x => x.Id);
+                    table.PrimaryKey("PK_LaunchServiceProviders", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Location",
+                name: "Locations",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false),
@@ -56,11 +56,11 @@ namespace Back_End_Challenge_20210221.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Location", x => x.Id);
+                    table.PrimaryKey("PK_Locations", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Orbit",
+                name: "Orbits",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false),
@@ -69,7 +69,7 @@ namespace Back_End_Challenge_20210221.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Orbit", x => x.Id);
+                    table.PrimaryKey("PK_Orbits", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -85,7 +85,7 @@ namespace Back_End_Challenge_20210221.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Rocket",
+                name: "Rockets",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false),
@@ -93,16 +93,16 @@ namespace Back_End_Challenge_20210221.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Rocket", x => x.Id);
+                    table.PrimaryKey("PK_Rockets", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Rocket_Configuration_ConfigurationId",
+                        name: "FK_Rockets_Configurations_ConfigurationId",
                         column: x => x.ConfigurationId,
-                        principalTable: "Configuration",
+                        principalTable: "Configurations",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "Pad",
+                name: "Pads",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false),
@@ -120,16 +120,16 @@ namespace Back_End_Challenge_20210221.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Pad", x => x.Id);
+                    table.PrimaryKey("PK_Pads", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Pad_Location_LocationId",
+                        name: "FK_Pads_Locations_LocationId",
                         column: x => x.LocationId,
-                        principalTable: "Location",
+                        principalTable: "Locations",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "Mission",
+                name: "Missions",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false),
@@ -142,11 +142,11 @@ namespace Back_End_Challenge_20210221.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Mission", x => x.Id);
+                    table.PrimaryKey("PK_Missions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Mission_Orbit_OrbitId",
+                        name: "FK_Missions_Orbits_OrbitId",
                         column: x => x.OrbitId,
-                        principalTable: "Orbit",
+                        principalTable: "Orbits",
                         principalColumn: "Id");
                 });
 
@@ -184,24 +184,24 @@ namespace Back_End_Challenge_20210221.Migrations
                 {
                     table.PrimaryKey("PK_Launchers", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Launchers_LaunchServiceProvider_LaunchServiceProviderId",
+                        name: "FK_Launchers_LaunchServiceProviders_LaunchServiceProviderId",
                         column: x => x.LaunchServiceProviderId,
-                        principalTable: "LaunchServiceProvider",
+                        principalTable: "LaunchServiceProviders",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Launchers_Mission_MissionId",
+                        name: "FK_Launchers_Missions_MissionId",
                         column: x => x.MissionId,
-                        principalTable: "Mission",
+                        principalTable: "Missions",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Launchers_Pad_PadId",
+                        name: "FK_Launchers_Pads_PadId",
                         column: x => x.PadId,
-                        principalTable: "Pad",
+                        principalTable: "Pads",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Launchers_Rocket_RocketId",
+                        name: "FK_Launchers_Rockets_RocketId",
                         column: x => x.RocketId,
-                        principalTable: "Rocket",
+                        principalTable: "Rockets",
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Launchers_Status_StatusLaunchId",
@@ -211,7 +211,7 @@ namespace Back_End_Challenge_20210221.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Program",
+                name: "Programs",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false),
@@ -227,16 +227,16 @@ namespace Back_End_Challenge_20210221.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Program", x => x.Id);
+                    table.PrimaryKey("PK_Programs", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Program_Launchers_LaunchId",
+                        name: "FK_Programs_Launchers_LaunchId",
                         column: x => x.LaunchId,
                         principalTable: "Launchers",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "Agency",
+                name: "Agencies",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false),
@@ -247,17 +247,17 @@ namespace Back_End_Challenge_20210221.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Agency", x => x.Id);
+                    table.PrimaryKey("PK_Agencies", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Agency_Program_ProgramId",
+                        name: "FK_Agencies_Programs_ProgramId",
                         column: x => x.ProgramId,
-                        principalTable: "Program",
+                        principalTable: "Programs",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Agency_ProgramId",
-                table: "Agency",
+                name: "IX_Agencies_ProgramId",
+                table: "Agencies",
                 column: "ProgramId");
 
             migrationBuilder.CreateIndex(
@@ -286,23 +286,23 @@ namespace Back_End_Challenge_20210221.Migrations
                 column: "StatusLaunchId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Mission_OrbitId",
-                table: "Mission",
+                name: "IX_Missions_OrbitId",
+                table: "Missions",
                 column: "OrbitId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Pad_LocationId",
-                table: "Pad",
+                name: "IX_Pads_LocationId",
+                table: "Pads",
                 column: "LocationId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Program_LaunchId",
-                table: "Program",
+                name: "IX_Programs_LaunchId",
+                table: "Programs",
                 column: "LaunchId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Rocket_ConfigurationId",
-                table: "Rocket",
+                name: "IX_Rockets_ConfigurationId",
+                table: "Rockets",
                 column: "ConfigurationId");
         }
 
@@ -310,37 +310,37 @@ namespace Back_End_Challenge_20210221.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Agency");
+                name: "Agencies");
 
             migrationBuilder.DropTable(
-                name: "Program");
+                name: "Programs");
 
             migrationBuilder.DropTable(
                 name: "Launchers");
 
             migrationBuilder.DropTable(
-                name: "LaunchServiceProvider");
+                name: "LaunchServiceProviders");
 
             migrationBuilder.DropTable(
-                name: "Mission");
+                name: "Missions");
 
             migrationBuilder.DropTable(
-                name: "Pad");
+                name: "Pads");
 
             migrationBuilder.DropTable(
-                name: "Rocket");
+                name: "Rockets");
 
             migrationBuilder.DropTable(
                 name: "Status");
 
             migrationBuilder.DropTable(
-                name: "Orbit");
+                name: "Orbits");
 
             migrationBuilder.DropTable(
-                name: "Location");
+                name: "Locations");
 
             migrationBuilder.DropTable(
-                name: "Configuration");
+                name: "Configurations");
         }
     }
 }

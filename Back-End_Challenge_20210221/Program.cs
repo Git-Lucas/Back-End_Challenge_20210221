@@ -14,7 +14,6 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<EfSqlServerAdapter>();
 
 builder.Services.AddScoped<ILaunchData, LaunchDataSqlServer>();
-//builder.Services.AddScoped<ICronService, CronService>();
 
 builder.Services.AddHostedService<CronService>();
 
