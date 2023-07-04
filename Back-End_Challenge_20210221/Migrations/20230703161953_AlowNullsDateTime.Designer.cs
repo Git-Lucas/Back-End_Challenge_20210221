@@ -4,6 +4,7 @@ using Back_End_Challenge_20210221.Infra.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Back_End_Challenge_20210221.Migrations
 {
     [DbContext(typeof(EfSqlServerAdapter))]
-    partial class EfSqlServerAdapterModelSnapshot : ModelSnapshot
+    [Migration("20230703161953_AlowNullsDateTime")]
+    partial class AlowNullsDateTime
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

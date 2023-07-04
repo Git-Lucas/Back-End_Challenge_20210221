@@ -19,13 +19,13 @@ namespace Back_End_Challenge_20210221.Domain.Models
         [JsonProperty("status")]
         public Status? StatusLaunch { get; set; }
 
-        public DateTime Net { get; set; }
+        public DateTime? Net { get; set; }
 
         [JsonProperty("window_end")]
-        public DateTime WindowEnd { get; set; }
+        public DateTime? WindowEnd { get; set; }
 
         [JsonProperty("window_start")]
-        public DateTime WindowStart { get; set; }
+        public DateTime? WindowStart { get; set; }
 
         public bool Inhold { get; set; }
 

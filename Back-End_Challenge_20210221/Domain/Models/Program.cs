@@ -18,10 +18,10 @@ namespace Back_End_Challenge_20210221.Domain.Models
         public Uri? ImageUrl { get; set; }
 
         [JsonProperty("start_date")]
-        public DateTimeOffset StartDate { get; set; }
+        public DateTime? StartDate { get; set; }
 
         [JsonProperty("end_date")]
-        public DateTimeOffset EndDate { get; set; }
+        public DateTime? EndDate { get; set; }
 
         [JsonProperty("info_url")]
         public Uri? InfoUrl { get; set; }

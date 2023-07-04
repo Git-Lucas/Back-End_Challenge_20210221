@@ -14,6 +14,8 @@ namespace Back_End_Challenge_20210221.Infra.Data
             _context = context;
         }
 
+        public async Task<int> CountAsync() => await _context.Launchers.CountAsync();
+
         public async Task CreateAsync(Launch launch)
         {
             var existingLaunch = await _context.Launchers.FirstOrDefaultAsync(x => x.Id == launch.Id);
@@ -131,9 +133,20 @@ namespace Back_End_Challenge_20210221.Infra.Data
             return launchers;
         }
 
-        public Task PutAsync(Guid id)
+        public async Task PutAsync(Guid id, Launch launch)
         {
-            throw new Exception("Não Implementado");
+            var launchDatabase = await _context.Launchers.AsNoTracking()
+                                                         .SingleOrDefaultAsync(x => x.Id == id);
+
+            if (launchDatabase is not null)
+            {
+                _context.Launchers.Update(launch);
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                throw new Exception("Não encontrado!");
+            }
         }
 
         public async Task DeleteAsync(Guid id)
@@ -148,12 +161,6 @@ namespace Back_End_Challenge_20210221.Infra.Data
             {
                 throw new Exception(ex.Message);
             }
-        }
-
-        public async Task DeleteAllAsync()
-        {
-            _context.Launchers.RemoveRange(_context.Launchers);
-            await _context.SaveChangesAsync();
         }
     }
 }
