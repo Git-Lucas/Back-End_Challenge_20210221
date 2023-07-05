@@ -12,12 +12,15 @@ namespace Back_End_Challenge_20210221.Infra.Cron
         private readonly IServiceProvider _serviceProvider;
         public Timer? Timer;
         public TimeSpan ImportRange;
+        public int ImportLimit = 2000;
         public int Take = 100;
-        public int Skip;
+        public int Skip = 0;
+        public int Iterations;
         public HttpClient HttpClient = new HttpClient
         {
             BaseAddress = new Uri("https://ll.thespacedevs.com/2.0.0/")
         };
+        public int CountApiTheSpaceDevs;
 
         public CronService(ILogger<CronService> logger, IServiceProvider serviceProvider)
         {
@@ -27,8 +30,9 @@ namespace Back_End_Challenge_20210221.Infra.Cron
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            ImportRange = new TimeSpan(21, 39, 00) - DateTime.UtcNow.TimeOfDay;
+            ImportRange = new TimeSpan(23, 05, 00) - DateTime.UtcNow.TimeOfDay;
             _logger.LogInformation($"StartAsync {DateTime.UtcNow}");
+            Iterations = ImportLimit / Take;
             Timer = new Timer(ImportData, null, ImportRange, TimeSpan.FromDays(1));
             return Task.CompletedTask;
         }
@@ -38,10 +42,9 @@ namespace Back_End_Challenge_20210221.Infra.Cron
             using (var scope = _serviceProvider.CreateScope())
             {
                 var scopedService = scope.ServiceProvider.GetRequiredService<ILaunchData>();
-                var auxSkip = await GetSkip(scopedService);
-                Skip = auxSkip;
+                CountApiTheSpaceDevs = await GetCountApiTheSpaceDevs(scopedService);
 
-                while (Skip < auxSkip + 2000)
+                for (int i = 1; i <= Iterations; i++)
                 {
                     var response = await HttpClient.GetAsync($"launch/?limit={Take}&offset={Skip}");
                     var jsonString = await response.Content.ReadAsStringAsync();
@@ -58,25 +61,24 @@ namespace Back_End_Challenge_20210221.Infra.Cron
                         await scopedService.CreateAsync(l);
                     }
 
-                    Skip += 100;
+                    Skip = Skip + Take > CountApiTheSpaceDevs ? 0 : Skip + Take;
 
-                    _logger.LogInformation($"Imported {Skip} records! {DateTime.Now}");
+                    _logger.LogInformation($"Imported {i * Take} records! {DateTime.Now}");
 
                     await Task.Delay(TimeSpan.FromMinutes(5));
                 }
             }
         }
 
-        private async Task<int> GetSkip(ILaunchData scopedService)
+        private async Task<int> GetCountApiTheSpaceDevs(ILaunchData scopedService)
         {
-            var countDatabase = await scopedService.CountAsync();
+            var response = await HttpClient.GetAsync($"launch/?limit=1&offset=0");
+            var jsonString = await response.Content.ReadAsStringAsync();
 
-            //var response = await HttpClient.GetAsync($"launch/?limit=1&offset=0");
-            //var jsonString = await response.Content.ReadAsStringAsync();
-            //dynamic countApiTheSpaceDevs = JsonConvert.DeserializeObject<ExpandoObject>(jsonString)!;
-            //countApiTheSpaceDevs = JsonConvert.SerializeObject(countApiTheSpaceDevs.results);
+            dynamic obj = JsonConvert.DeserializeObject<ExpandoObject>(jsonString)!;
+            obj = JsonConvert.SerializeObject(obj.count);
 
-            return countDatabase;
+            return JsonConvert.DeserializeObject<int>(obj);
         }
 
         public Task StopAsync(CancellationToken cancellationToken)

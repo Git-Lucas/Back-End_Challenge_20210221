@@ -1,5 +1,6 @@
 ﻿using Back_End_Challenge_20210221.Domain.Data;
 using Back_End_Challenge_20210221.Domain.Models;
+using Back_End_Challenge_20210221.Domain.Models.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,9 +24,9 @@ namespace Back_End_Challenge_20210221.Infra.Controllers
             try
             {
                 var result = await _launchData.GetAllAsync(skip, take);
-                var count = await _launchData.CountAsync();
+                var count = await _launchData.CountUnlikeTrashAsync();
                 var currentPage = skip / take + 1;
-                var totalPages = count / take;
+                var totalPages = count % take != 0 ? count / take + 1 : count / take;
 
                 return Ok(new
                 {
@@ -49,7 +50,11 @@ namespace Back_End_Challenge_20210221.Infra.Controllers
             try
             {
                 var result = await _launchData.GetAsync(id);
-                return Ok(result);
+
+                if (result.Status != Import_Status.Trash)
+                    return Ok(result);
+                else
+                    return NotFound("Deleted locally.");
             }
             catch (Exception ex)
             {
@@ -60,18 +65,27 @@ namespace Back_End_Challenge_20210221.Infra.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAsync(Guid id, Launch launch)
         {
-            if (id != launch.Id)
-                return BadRequest();
+            if (id == launch.Id)
+            {
+                try
+                {
+                    var launchDatabase = await _launchData.GetAsync(id);
 
-            try
-            {
-                await _launchData.PutAsync(id, launch);
-                return Ok();
+                    if (launchDatabase.Status != Import_Status.Trash)
+                    {
+                        await _launchData.PutAsync(id, launch);
+                        return Ok();
+                    }
+                    else
+                        return NotFound("Deleted locally.");
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
             }
-            catch(Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            else
+                return BadRequest("The id does not match the object.");
         }
 
         [HttpDelete("{id}")]
@@ -80,6 +94,20 @@ namespace Back_End_Challenge_20210221.Infra.Controllers
             try
             {
                 await _launchData.DeleteAsync(id);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteAllAsync()
+        {
+            try
+            {
+                await _launchData.DeleteAllAsync();
                 return Ok();
             }
             catch (Exception ex)
