@@ -123,25 +123,21 @@ namespace Back_End_Challenge_20210221.Infra.Data
             }
             else
             {
-                throw new Exception("Não encontrado!");
+                throw new Exception("Not found.");
             }
         }
 
-        public async Task<List<Launch>> GetAllAsync(int skip, int take)
-        {
-            var launchers = await _context.Launchers.Where(x => x.Status != Import_Status.Trash)
-                                                    .Include(x => x.StatusLaunch)
-                                                    .Include(x => x.LaunchServiceProvider)
-                                                    .Include(x => x.Rocket)
-                                                    .ThenInclude(x => x.Configuration)
-                                                    .Include(x => x.Pad)
-                                                    .ThenInclude(x => x.Location)
-                                                    .Skip(skip)
-                                                    .Take(take)
-                                                    .ToListAsync();
-
-            return launchers;
-        }
+        public async Task<List<Launch>> GetAllAsync(int skip, int take) => 
+            await _context.Launchers.Where(x => x.Status != Import_Status.Trash)
+                                    .Include(x => x.StatusLaunch)
+                                    .Include(x => x.LaunchServiceProvider)
+                                    .Include(x => x.Rocket)
+                                    .ThenInclude(x => x.Configuration)
+                                    .Include(x => x.Pad)
+                                    .ThenInclude(x => x.Location)
+                                    .Skip(skip)
+                                    .Take(take)
+                                    .ToListAsync();
 
         public async Task PutAsync(Guid id, Launch launch)
         {
@@ -156,7 +152,7 @@ namespace Back_End_Challenge_20210221.Infra.Data
             }
             else
             {
-                throw new Exception("Não encontrado!");
+                throw new Exception("Not found.");
             }
         }
 
