@@ -12,6 +12,6 @@ namespace Back_End_Challenge_20210221.Domain.Data
         Task<List<Launch>> GetAllAsync(int skip, int take);
         Task PutAsync(Guid id, Launch launch);
         Task DeleteAsync(Guid id);
-        Task DeleteAllAsync();
+        //Task DeleteAllAsync();
     }
 }

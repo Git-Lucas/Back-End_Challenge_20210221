@@ -30,7 +30,7 @@ namespace Back_End_Challenge_20210221.Infra.Cron
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            ImportRange = new TimeSpan(17, 26, 30) - DateTime.UtcNow.TimeOfDay;
+            ImportRange = new TimeSpan(05, 53, 00) - DateTime.UtcNow.TimeOfDay;
             _logger.LogInformation($"StartAsync {DateTime.UtcNow}");
             Iterations = ImportLimit / Take;
             Timer = new Timer(ImportData, null, ImportRange, TimeSpan.FromDays(1));

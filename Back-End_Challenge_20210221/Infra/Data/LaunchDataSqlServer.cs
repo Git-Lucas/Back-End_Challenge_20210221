@@ -175,20 +175,20 @@ namespace Back_End_Challenge_20210221.Infra.Data
             }
         }
 
-        public async Task DeleteAllAsync()
-        {
-            _context.Launchers.RemoveRange(_context.Launchers);
-            _context.Status.RemoveRange(_context.Status);
-            _context.LaunchServiceProviders.RemoveRange(_context.LaunchServiceProviders);
-            _context.Rockets.RemoveRange(_context.Rockets);
-            _context.Configurations.RemoveRange(_context.Configurations);
-            _context.Missions.RemoveRange(_context.Missions);
-            _context.Orbits.RemoveRange(_context.Orbits);
-            _context.Pads.RemoveRange(_context.Pads);
-            _context.Locations.RemoveRange(_context.Locations);
-            _context.Programs.RemoveRange(_context.Programs);
-            _context.Agencies.RemoveRange(_context.Agencies);
-            await _context.SaveChangesAsync();
-        }
+        //public async Task DeleteAllAsync()
+        //{
+        //    _context.Launchers.RemoveRange(_context.Launchers);
+        //    _context.Status.RemoveRange(_context.Status);
+        //    _context.LaunchServiceProviders.RemoveRange(_context.LaunchServiceProviders);
+        //    _context.Rockets.RemoveRange(_context.Rockets);
+        //    _context.Configurations.RemoveRange(_context.Configurations);
+        //    _context.Missions.RemoveRange(_context.Missions);
+        //    _context.Orbits.RemoveRange(_context.Orbits);
+        //    _context.Pads.RemoveRange(_context.Pads);
+        //    _context.Locations.RemoveRange(_context.Locations);
+        //    _context.Programs.RemoveRange(_context.Programs);
+        //    _context.Agencies.RemoveRange(_context.Agencies);
+        //    await _context.SaveChangesAsync();
+        //}
     }
 }

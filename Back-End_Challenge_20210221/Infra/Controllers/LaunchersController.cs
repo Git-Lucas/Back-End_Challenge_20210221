@@ -102,18 +102,18 @@ namespace Back_End_Challenge_20210221.Infra.Controllers
             }
         }
 
-        [HttpDelete]
-        public async Task<IActionResult> DeleteAllAsync()
-        {
-            try
-            {
-                await _launchData.DeleteAllAsync();
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
+        //[HttpDelete]
+        //public async Task<IActionResult> DeleteAllAsync()
+        //{
+        //    try
+        //    {
+        //        await _launchData.DeleteAllAsync();
+        //        return Ok();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(ex.Message);
+        //    }
+        //}
     }
 }
