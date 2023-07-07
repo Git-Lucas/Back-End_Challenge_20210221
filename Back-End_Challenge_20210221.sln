@@ -5,7 +5,12 @@ VisualStudioVersion = 17.6.33815.320
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Back-End_Challenge_20210221", "Back-End_Challenge_20210221\Back-End_Challenge_20210221.csproj", "{024F8194-3898-471E-9433-884A4C9042B6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Back-End_Challenge_20210221.Tests", "Back-End_Challenge_20210221.Tests\Back-End_Challenge_20210221.Tests.csproj", "{041AB114-4C24-456B-83CB-31C1BA83BB8D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Back-End_Challenge_20210221.Tests", "Back-End_Challenge_20210221.Tests\Back-End_Challenge_20210221.Tests.csproj", "{041AB114-4C24-456B-83CB-31C1BA83BB8D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8A8C0E78-EA86-452F-B0E3-37AA3413EE8C}"
+	ProjectSection(SolutionItems) = preProject
+		readme.md = readme.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
