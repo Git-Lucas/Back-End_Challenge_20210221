@@ -11,6 +11,7 @@ namespace Back_End_Challenge_20210221.Infra.Cron
         private readonly ILogger<CronService> _logger;
         private readonly IServiceProvider _serviceProvider;
         public Timer? Timer;
+        public TimeSpan ImportStart = new (00, 00, 00);
         public TimeSpan ImportRange;
         public int ImportLimit = 2000;
         public int Take = 100;
@@ -30,7 +31,7 @@ namespace Back_End_Challenge_20210221.Infra.Cron
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            ImportRange = new TimeSpan(05, 53, 00) - DateTime.UtcNow.TimeOfDay;
+            ImportRange = ImportStart - DateTime.UtcNow.TimeOfDay;
             _logger.LogInformation($"StartAsync {DateTime.UtcNow}");
             Iterations = ImportLimit / Take;
             Timer = new Timer(ImportData, null, ImportRange, TimeSpan.FromDays(1));

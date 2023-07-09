@@ -7,6 +7,7 @@
     <UserSecretsId>aspnet-Back_End_Challenge_20210221-c6b9d6e2-3c81-4347-99c1-4b5c64116931</UserSecretsId>
     <RootNamespace>Back_End_Challenge_20210221</RootNamespace>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
 
   <ItemGroup>

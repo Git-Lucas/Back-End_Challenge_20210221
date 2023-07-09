@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  back-end_challenge_20210221:
+    image: ${DOCKER_REGISTRY-}backendchallenge20210221
+    build:
+      context: .
+      dockerfile: Back-End_Challenge_20210221/Dockerfile
