@@ -13,7 +13,7 @@
    ```bash
    docker-compose up
    ```
-2. No arquivo "Back-End_Challenge_20210221\Infra\Cron\CronService", defina no "ImportStart", a hora, minuto e segundo (UTC) para início da execução da importação.
+2. No arquivo "Back-End_Challenge_20210221\Infra\Cron\CronService", defina no "ImportStart" (linha 14), a hora, minuto e segundo (UTC) para início da execução da importação.
    ```bash
    public TimeSpan ImportStart = new (00, 00, 00);
    ```
