@@ -13,7 +13,19 @@
    ```bash
    docker-compose up
    ```
-2. No arquivo "Back-End_Challenge_20210221\Infra\Cron\CronService", defina no "ImportStart" (linha 14), a hora, minuto e segundo (UTC) para início da execução da importação.
+2. Para aplicação das migrações, e criação do banco de dados através do Entity Framework, rode:
+   ```bash
+   dotnet ef database update
+   ```
+3. No arquivo "Back-End_Challenge_20210221\Infra\Cron\CronService", defina no "ImportStart" (linha 14), a hora, minuto e segundo (UTC) para início da execução da importação.
    ```bash
    public TimeSpan ImportStart = new (00, 00, 00);
+   ```
+4. Para geração do token de autenticação, necessário para utilização do LaunchersController, rode:
+   ```bash
+   dotnet user-jwts create
+   ```
+	E em seguida, já na página "https://localhost/swagger/index.html", em "Authorize", cole o token:
+	```bash
+   Bearer {token}
    ```

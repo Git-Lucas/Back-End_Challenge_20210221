@@ -3,15 +3,6 @@
     "secrets1": {
       "type": "secrets.user",
       "dynamicId": null
-    },
-    "mssql1": {
-      "containerPorts": "1433:1433",
-      "secretStore": "LocalSecretsFile",
-      "containerName": "sql-server-2022",
-      "containerImage": "mcr.microsoft.com/mssql/server:2022-latest",
-      "type": "mssql.container",
-      "connectionId": "ConnectionStrings:Default",
-      "dynamicId": null
     }
   }
 }
