@@ -127,8 +127,9 @@ namespace Back_End_Challenge_20210221.Infra.Data
             }
         }
 
-        public async Task<List<Launch>> GetAllAsync(int skip, int take) => 
-            await _context.Launchers.Where(x => x.Status != Import_Status.Trash)
+        public async Task<List<Launch>> GetAllAsync(int skip, int take) =>
+            await _context.Launchers.AsNoTracking()
+                                    .Where(x => x.Status != Import_Status.Trash)
                                     .Include(x => x.StatusLaunch)
                                     .Include(x => x.LaunchServiceProvider)
                                     .Include(x => x.Rocket)
@@ -146,9 +147,16 @@ namespace Back_End_Challenge_20210221.Infra.Data
 
             if (launchDatabase is not null)
             {
-                launch.Status = Import_Status.Published;
-                _context.Launchers.Update(launch);
-                await _context.SaveChangesAsync();
+                if (launchDatabase.Status != Import_Status.Trash)
+                {
+                    launch.Status = Import_Status.Published;
+                    _context.Launchers.Update(launch);
+                    await _context.SaveChangesAsync();
+                }
+                else
+                {
+                    throw new Exception("Deleted locally.");
+                }
             }
             else
             {

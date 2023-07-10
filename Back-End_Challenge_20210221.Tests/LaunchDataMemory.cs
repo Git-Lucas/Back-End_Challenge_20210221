@@ -400,8 +400,15 @@ namespace Back_End_Challenge_20210221.Infra.Data
 
             if (launchList is not null)
             {
-                launch.Status = Import_Status.Published;
-                launchList = launch;
+                if (launchList.Status != Import_Status.Trash)
+                {
+                    launch.Status = Import_Status.Published;
+                    launchList = launch;
+                }
+                else
+                {
+                    throw new Exception("Deleted locally.");
+                }
             }
             else
             {
@@ -418,7 +425,7 @@ namespace Back_End_Challenge_20210221.Infra.Data
                 if (launch.Status != Import_Status.Trash)
                     launch.Status = Import_Status.Trash;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }

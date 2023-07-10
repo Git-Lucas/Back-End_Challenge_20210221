@@ -117,15 +117,15 @@ namespace Back_End_Challenge_20210221.Tests
         {
             var launch = LaunchData.Get(new Guid("f8c9f344-a6df-4f30-873a-90fe3a7840b3"));
 
-            MockRepo.Setup(x => x.GetAsync(new Guid("f8c9f344-a6df-4f30-873a-90fe3a7840b3")))
-                    .ReturnsAsync(LaunchData.Get(new Guid("f8c9f344-a6df-4f30-873a-90fe3a7840b3")));
+            MockRepo.Setup(x => x.PutAsync(new Guid("f8c9f344-a6df-4f30-873a-90fe3a7840b3"), launch))
+                    .Returns(LaunchData.Put(new Guid("f8c9f344-a6df-4f30-873a-90fe3a7840b3"), launch));
 
             var controller = new LaunchersController(MockRepo.Object);
 
             var result = await controller.PutAsync(new Guid("f8c9f344-a6df-4f30-873a-90fe3a7840b3"), launch);
 
-            var notFoundObjectResult = Assert.IsType<NotFoundObjectResult>(result);
-            Assert.Equal("Deleted locally.", notFoundObjectResult.Value);
+            var badRequestObjectResult = Assert.IsType<BadRequestObjectResult>(result);
+            Assert.Equal("Deleted locally.", badRequestObjectResult.Value);
         }
 
         [Fact]

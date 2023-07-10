@@ -69,15 +69,8 @@ namespace Back_End_Challenge_20210221.Infra.Controllers
             {
                 try
                 {
-                    var launchDatabase = await _launchData.GetAsync(id);
-
-                    if (launchDatabase.Status != Import_Status.Trash)
-                    {
-                        await _launchData.PutAsync(id, launch);
-                        return Ok();
-                    }
-                    else
-                        return NotFound("Deleted locally.");
+                    await _launchData.PutAsync(id, launch);
+                    return Ok();
                 }
                 catch (Exception ex)
                 {

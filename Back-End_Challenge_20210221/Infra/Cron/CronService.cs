@@ -10,8 +10,8 @@ namespace Back_End_Challenge_20210221.Infra.Cron
     {
         private readonly ILogger<CronService> _logger;
         private readonly IServiceProvider _serviceProvider;
-        public Timer? Timer;
-        public TimeSpan ImportStart = new (20, 55, 30);
+        public Timer Timer;
+        public TimeSpan ImportStart = new (04, 10, 00);
         public TimeSpan ImportRange;
         public int ImportLimit = 2000;
         public int Take = 100;
