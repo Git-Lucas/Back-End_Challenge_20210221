@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>aspnet-Back_End_Challenge_20210221-c6b9d6e2-3c81-4347-99c1-4b5c64116931</UserSecretsId>
     <RootNamespace>Back_End_Challenge_20210221</RootNamespace>
