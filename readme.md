@@ -61,8 +61,8 @@ Foi utilizado o JWT (Json Web Token), para realizar as autenticações das requisi
 ## Docker
 Aplicação e banco de dados rodando em Container Docker.
 
-![](https://github.com/Git-Lucas/Back-End_Challenge_20210221/blob/master/imgs/Docker_1.png)
-![](https://github.com/Git-Lucas/Back-End_Challenge_20210221/blob/master/imgs/Docker_2.png)
+![](https://github.com/Git-Lucas/Back-End_Challenge_20210221/blob/master/imgs/Docker_3.png)
+![](https://github.com/Git-Lucas/Back-End_Challenge_20210221/blob/master/imgs/Docker_4.png)
 
 ## Testes
 Um projeto "Test" foi adicionado com referência ao projeto principal, para adição do arquivo responsável pelo teste unitário do "LaunchersConttroller".
