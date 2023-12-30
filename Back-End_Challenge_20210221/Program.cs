@@ -69,12 +69,8 @@ using IServiceScope scope = app.Services.CreateScope();
 EfSqlServerAdapter context = scope.ServiceProvider.GetRequiredService<EfSqlServerAdapter>();
 await context.Database.MigrateAsync();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseAuthorization();
 
@@ -86,7 +82,7 @@ app.MapGet("/", () =>
 });
 app.MapGet("validToken/", () =>
 {
-    JwtSecurityTokenHandler tokenHandler = new ();
+    JwtSecurityTokenHandler tokenHandler = new();
     byte[] chave = Encoding.ASCII.GetBytes("4f7b17c4b5afe5d9527c74c49002c4d8a268f7e31d9b16357887b7556fbf199a");
     SecurityTokenDescriptor tokenDescriptor = new()
     {
