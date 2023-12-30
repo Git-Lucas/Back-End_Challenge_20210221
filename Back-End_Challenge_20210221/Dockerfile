@@ -7,14 +7,13 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
-COPY ["Back-End_Challenge_20210221/Back-End_Challenge_20210221.csproj", "Back-End_Challenge_20210221/"]
-RUN dotnet restore "Back-End_Challenge_20210221/Back-End_Challenge_20210221.csproj"
+COPY *.csproj .
+RUN dotnet restore
 COPY . .
-WORKDIR "/src/Back-End_Challenge_20210221"
-RUN dotnet build "Back-End_Challenge_20210221.csproj" -c Release -o /app/build
+RUN dotnet build -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "Back-End_Challenge_20210221.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
