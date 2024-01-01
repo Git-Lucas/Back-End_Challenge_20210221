@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 
@@ -33,7 +32,16 @@ builder.Services.AddAuthentication(x =>
 
 builder.Services.AddControllers();
 
-builder.Services.AddDbContext<EfSqlServerAdapter>();
+if (builder.Environment.IsDevelopment())
+{
+    builder.Services.AddDbContext<EfSqlServerAdapter>(options =>
+        options.UseInMemoryDatabase("BackEndChallengeDb"));
+}
+else
+{
+    builder.Services.AddDbContext<EfSqlServerAdapter>(options =>
+        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+}
 
 builder.Services.AddScoped<ILaunchData, LaunchDataSqlServer>();
 builder.Services.AddHostedService<CronService>();
@@ -58,7 +66,7 @@ builder.Services.AddSwaggerGen(x =>
          Id = "Bearer"
        }
       },
-      new string[] { }
+      Array.Empty<string>()
     }
   });
 });
@@ -67,7 +75,10 @@ var app = builder.Build();
 
 using IServiceScope scope = app.Services.CreateScope();
 EfSqlServerAdapter context = scope.ServiceProvider.GetRequiredService<EfSqlServerAdapter>();
-await context.Database.MigrateAsync();
+if (context.Database.IsRelational())
+{
+    context.Database.Migrate();
+}
 
 app.UseSwagger();
 app.UseSwaggerUI();
