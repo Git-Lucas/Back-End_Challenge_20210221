@@ -20,7 +20,6 @@ public class LaunchersControllerTest
         OkObjectResult okObjectResult = Assert.IsType<OkObjectResult>(result);
         dynamic model = Assert.IsAssignableFrom<dynamic>(okObjectResult.Value);
 
-        Assert.Equal(3, model.GetType().GetProperty("count").GetValue(model, null));
         Assert.Equal(4, model.GetType().GetProperty("count").GetValue(model, null));
         Assert.Equal(0, model.GetType().GetProperty("skip").GetValue(model, null));
         Assert.Equal(2, model.GetType().GetProperty("take").GetValue(model, null));
