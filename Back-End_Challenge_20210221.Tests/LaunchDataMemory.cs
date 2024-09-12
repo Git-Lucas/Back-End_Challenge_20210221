@@ -401,38 +401,44 @@ public class LaunchDataMemory
 
     public async Task Put(Guid id, Launch launch)
     {
-        var launchList = Launchers.SingleOrDefault(x => x.Id == id);
-
-        if (launchList is not null)
+        await Task.Run(() =>
         {
-            if (launchList.Status != Import_Status.Trash)
+            var launchList = Launchers.SingleOrDefault(x => x.Id == id);
+
+            if (launchList is not null)
             {
-                launch.Status = Import_Status.Published;
+                if (launchList.Status != Import_Status.Trash)
+                {
+                    launch.Status = Import_Status.Published;
+                }
+                else
+                {
+                    throw new Exception("Deleted locally.");
+                }
             }
             else
             {
-                throw new Exception("Deleted locally.");
+                throw new Exception("Not found.");
             }
-        }
-        else
-        {
-            throw new Exception("Not found.");
-        }
+        });
     }
 
     public async Task Delete(Guid id)
     {
-        try
+        await Task.Run(() =>
         {
-            var launch = Get(id);
+            try
+            {
+                var launch = Get(id);
 
-            if (launch.Status != Import_Status.Trash)
-                launch.Status = Import_Status.Trash;
-        }
-        catch (Exception ex)
-        {
-            throw new Exception(ex.Message);
-        }
+                if (launch.Status != Import_Status.Trash)
+                    launch.Status = Import_Status.Trash;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        });
     }
 
     public void DeleteAll()
