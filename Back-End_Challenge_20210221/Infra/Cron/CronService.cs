@@ -10,41 +10,42 @@ public class CronService : IHostedService, IDisposable
 {
     private readonly ILogger<CronService> _logger;
     private readonly IServiceProvider _serviceProvider;
-    private Timer? Timer;
-    private TimeSpan ImportRange = TimeSpan.FromMinutes(5);
-    private int ImportLimit = 2000;
-    private int Take = 100;
-    private  int Skip = 0;
-    private int Iterations;
-    private HttpClient HttpClient = new ()
-    {
-        BaseAddress = new Uri("https://ll.thespacedevs.com/2.0.0/")
-    };
-    private int CountApiTheSpaceDevs;
+    private Timer? _timer;
+    private readonly TimeSpan _importRange = TimeSpan.FromMinutes(1);
+    private readonly int _importLimit = 2000;
+    private readonly int _take = 100;
+    private int _skip = 0;
+    private int _iterations;
+    private readonly HttpClient _httpClient;
 
-    public CronService(ILogger<CronService> logger, IServiceProvider serviceProvider)
+    public CronService(ILogger<CronService> logger, IServiceProvider serviceProvider, IConfiguration configuration)
     {
         _logger = logger;
         _serviceProvider = serviceProvider;
+        _httpClient = new HttpClient()
+        {
+            BaseAddress = new Uri(configuration["TheSpaceDevsBaseAddress"] 
+                ?? throw new InvalidOperationException("TheSpaceDevsBaseAddress not found in configuration file."))
+        };
     }
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
-        _logger.LogInformation($"StartAsync {DateTime.UtcNow}");
-        Iterations = ImportLimit / Take;
-        Timer = new Timer(ImportData, null, ImportRange, TimeSpan.FromDays(1));
+        _logger.LogInformation("StartAsync {UtcNow}", DateTime.UtcNow);
+        _iterations = _importLimit / _take;
+        _timer = new Timer(ImportData, null, _importRange, TimeSpan.FromDays(1));
         return Task.CompletedTask;
     }
 
     private async void ImportData(object? state)
     {
-        using var scope = _serviceProvider.CreateScope();
-        var scopedService = scope.ServiceProvider.GetRequiredService<ILaunchData>();
-        CountApiTheSpaceDevs = await GetCountApiTheSpaceDevs(scopedService);
+        using IServiceScope scope = _serviceProvider.CreateScope();
+        ILaunchData scopedService = scope.ServiceProvider.GetRequiredService<ILaunchData>();
+        int countApiTheSpaceDevs = await GetCountApiTheSpaceDevs();
 
-        for (int i = 1; i <= Iterations; i++)
+        for (int i = 1; i <= _iterations; i++)
         {
-            var response = await HttpClient.GetAsync($"launch/?limit={Take}&offset={Skip}");
+            var response = await _httpClient.GetAsync($"launch/?limit={_take}&offset={_skip}");
             var jsonString = await response.Content.ReadAsStringAsync();
 
             dynamic obj = JsonConvert.DeserializeObject<ExpandoObject>(jsonString)!;
@@ -59,17 +60,17 @@ public class CronService : IHostedService, IDisposable
                 await scopedService.CreateAsync(l);
             }
 
-            Skip = Skip + Take > CountApiTheSpaceDevs ? 0 : Skip + Take;
+            _skip = _skip + _take > countApiTheSpaceDevs ? 0 : _skip + _take;
 
-            _logger.LogInformation($"Imported {i * Take} records! {DateTime.Now}");
+            _logger.LogInformation("Imported {RecordCount} records! {UtcNow}", i * _take, DateTime.Now);
 
-            await Task.Delay(ImportRange);
+            await Task.Delay(_importRange);
         }
     }
 
-    private async Task<int> GetCountApiTheSpaceDevs(ILaunchData scopedService)
+    private async Task<int> GetCountApiTheSpaceDevs()
     {
-        var response = await HttpClient.GetAsync($"launch/?limit=1&offset=0");
+        var response = await _httpClient.GetAsync($"launch/?limit=1&offset=0");
         var jsonString = await response.Content.ReadAsStringAsync();
 
         dynamic obj = JsonConvert.DeserializeObject<ExpandoObject>(jsonString)!;
@@ -80,13 +81,19 @@ public class CronService : IHostedService, IDisposable
 
     public Task StopAsync(CancellationToken cancellationToken)
     {
-        _logger.LogInformation($"StopAsync {DateTime.UtcNow}");
-        Timer?.Change(Timeout.Infinite, 0);
+        _logger.LogInformation("StopAsync {UtcNow}", DateTime.UtcNow);
+        _timer?.Change(Timeout.Infinite, 0);
         return Task.CompletedTask;
     }
 
     public void Dispose()
     {
-        Timer?.Dispose();
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        _timer?.Dispose();
     }
 }

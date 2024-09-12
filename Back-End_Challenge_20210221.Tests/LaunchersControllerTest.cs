@@ -1,150 +1,141 @@
-namespace Back_End_Challenge_20210221.Tests
+namespace Back_End_Challenge_20210221.Tests;
+
+public class LaunchersControllerTest
 {
-    public class LaunchersControllerTest
+    private readonly Mock<ILaunchData> _mockRepo = new();
+    private readonly LaunchDataMemory _launchData = new();
+
+    [Fact]
+    public async Task GetAllAsyncOk()
     {
-        private readonly ITestOutputHelper _testOutputHelper;
-        private readonly Mock<ILaunchData> MockRepo = new();
-        private readonly LaunchDataMemory LaunchData = new();
+        _mockRepo.Setup(x => x.CountUnlikeTrashAsync())
+                .ReturnsAsync(_launchData.CountUnlikeTrash());
+        _mockRepo.Setup(x => x.GetAllAsync(0, 2))
+                .ReturnsAsync(_launchData.GetAll(0,2));
 
-        public LaunchersControllerTest(ITestOutputHelper testOutputHelper)
-        {
-            _testOutputHelper = testOutputHelper;
-        }
+        LaunchersController controller = new LaunchersController(_mockRepo.Object);
 
-        [Fact]
-        public async Task GetAllAsyncOk()
-        {
-            MockRepo.Setup(x => x.CountUnlikeTrashAsync())
-                    .ReturnsAsync(LaunchData.CountUnlikeTrash());
-            MockRepo.Setup(x => x.GetAllAsync(0, 2))
-                    .ReturnsAsync(LaunchData.GetAll(0,2));
+        IActionResult result = await controller.GetAllAsync(0, 2);
 
-            var controller = new LaunchersController(MockRepo.Object);
+        OkObjectResult okObjectResult = Assert.IsType<OkObjectResult>(result);
+        dynamic model = Assert.IsAssignableFrom<dynamic>(okObjectResult.Value);
 
-            var result = await controller.GetAllAsync(0, 2);
+        Assert.Equal(4, model.GetType().GetProperty("count").GetValue(model, null));
+        Assert.Equal(0, model.GetType().GetProperty("skip").GetValue(model, null));
+        Assert.Equal(2, model.GetType().GetProperty("take").GetValue(model, null));
+        Assert.Equal(1, model.GetType().GetProperty("currentPage").GetValue(model, null));
+        Assert.Equal(2, model.GetType().GetProperty("totalPages").GetValue(model, null));
+        Assert.IsAssignableFrom<List<Launch>>(model.GetType().GetProperty("results").GetValue(model, null));
+    }
 
-            var okObjectResult = Assert.IsType<OkObjectResult>(result);
-            dynamic model = new ExpandoObject();
-            model = Assert.IsAssignableFrom<dynamic>(okObjectResult.Value);
+    [Fact]
+    public async Task GetAsyncOk()
+    {
+        _mockRepo.Setup(x => x.GetAsync(new Guid("e3df2ecd-c239-472f-95e4-2b89b4f75800")))
+                .ReturnsAsync(_launchData.Get(new Guid("e3df2ecd-c239-472f-95e4-2b89b4f75800")));
 
-            Assert.Equal(4, model.GetType().GetProperty("count").GetValue(model, null));
-            Assert.Equal(0, model.GetType().GetProperty("skip").GetValue(model, null));
-            Assert.Equal(2, model.GetType().GetProperty("take").GetValue(model, null));
-            Assert.Equal(1, model.GetType().GetProperty("currentPage").GetValue(model, null));
-            Assert.Equal(2, model.GetType().GetProperty("totalPages").GetValue(model, null));
-            Assert.IsAssignableFrom<List<Launch>>(model.GetType().GetProperty("results").GetValue(model, null));
-        }
+        LaunchersController controller = new LaunchersController(_mockRepo.Object);
+        IActionResult result = await controller.GetAsync(new Guid("e3df2ecd-c239-472f-95e4-2b89b4f75800"));
 
-        [Fact]
-        public async Task GetAsyncOk()
-        {
-            
-            MockRepo.Setup(x => x.GetAsync(new Guid("e3df2ecd-c239-472f-95e4-2b89b4f75800")))
-                    .ReturnsAsync(LaunchData.Get(new Guid("e3df2ecd-c239-472f-95e4-2b89b4f75800")));
+        OkObjectResult okObjectResult = Assert.IsType<OkObjectResult>(result);
+        Launch model = Assert.IsAssignableFrom<Launch>(okObjectResult.Value);
 
-            var controller = new LaunchersController(MockRepo.Object);
-            var result = await controller.GetAsync(new Guid("e3df2ecd-c239-472f-95e4-2b89b4f75800"));
-            
-            var okObjectResult = Assert.IsType<OkObjectResult>(result);
-            var model = Assert.IsAssignableFrom<Launch>(okObjectResult.Value);
+        Assert.Equal("Sputnik 8K74PS | Sputnik 1", model.Name);
+    }
 
-            Assert.Equal("Sputnik 8K74PS | Sputnik 1", model.Name);
-        }
+    [Fact]
+    public async Task GetAsyncDeleted()
+    {
+        _mockRepo.Setup(x => x.GetAsync(new Guid("f8c9f344-a6df-4f30-873a-90fe3a7840b3")))
+                .ReturnsAsync(_launchData.Get(new Guid("f8c9f344-a6df-4f30-873a-90fe3a7840b3")));
 
-        [Fact]
-        public async Task GetAsyncDeleted()
-        {
-            MockRepo.Setup(x => x.GetAsync(new Guid("f8c9f344-a6df-4f30-873a-90fe3a7840b3")))
-                    .ReturnsAsync(LaunchData.Get(new Guid("f8c9f344-a6df-4f30-873a-90fe3a7840b3")));
+        LaunchersController controller = new LaunchersController(_mockRepo.Object);
+        IActionResult result = await controller.GetAsync(new Guid("f8c9f344-a6df-4f30-873a-90fe3a7840b3"));
 
-            var controller = new LaunchersController(MockRepo.Object);
-            var result = await controller.GetAsync(new Guid("f8c9f344-a6df-4f30-873a-90fe3a7840b3"));
+        NotFoundObjectResult notFoundObjectResult = Assert.IsType<NotFoundObjectResult>(result);
+        Assert.Equal("Deleted locally.", notFoundObjectResult.Value);
+    }
 
-            var notFoundObjectResult = Assert.IsType<NotFoundObjectResult>(result);
-            Assert.Equal("Deleted locally.", notFoundObjectResult.Value);
-        }
+    [Fact]
+    public void NotFound()
+    {
+        Assert.Throws<Exception>(() => 
+        _mockRepo.Setup(x => x.GetAsync(new Guid("f8c9f344-a6df-4f30-873a-90fe3a7840b4")))
+                .ReturnsAsync(_launchData.Get(new Guid("f8c9f344-a6df-4f30-873a-90fe3a7840b4"))));
+    }
 
-        [Fact]
-        public void NotFound()
-        {
-            Assert.Throws<Exception>(() => 
-            MockRepo.Setup(x => x.GetAsync(new Guid("f8c9f344-a6df-4f30-873a-90fe3a7840b4")))
-                    .ReturnsAsync(LaunchData.Get(new Guid("f8c9f344-a6df-4f30-873a-90fe3a7840b4"))));
-        }
+    [Fact]
+    public async Task PutAsyncOk()
+    {
+        Launch launch = _launchData.Get(new Guid("535c1a09-97c8-4f96-bb64-6336d4bcb1fb"));
+        launch.Name = "Lucas";
 
-        [Fact]
-        public async Task PutAsyncOk()
-        {
-            var launch = LaunchData.Get(new Guid("535c1a09-97c8-4f96-bb64-6336d4bcb1fb"));
-            launch.Name = "Lucas";
+        _mockRepo.Setup(x => x.GetAsync(new Guid("535c1a09-97c8-4f96-bb64-6336d4bcb1fb")))
+                .ReturnsAsync(_launchData.Get(new Guid("535c1a09-97c8-4f96-bb64-6336d4bcb1fb")));
 
-            MockRepo.Setup(x => x.GetAsync(new Guid("535c1a09-97c8-4f96-bb64-6336d4bcb1fb")))
-                    .ReturnsAsync(LaunchData.Get(new Guid("535c1a09-97c8-4f96-bb64-6336d4bcb1fb")));
+        _mockRepo.Setup(x => x.PutAsync(new Guid("535c1a09-97c8-4f96-bb64-6336d4bcb1fb"), launch))
+                .Returns(_launchData.Put(new Guid("535c1a09-97c8-4f96-bb64-6336d4bcb1fb"), launch));
 
-            MockRepo.Setup(x => x.PutAsync(new Guid("535c1a09-97c8-4f96-bb64-6336d4bcb1fb"), launch))
-                    .Returns(LaunchData.Put(new Guid("535c1a09-97c8-4f96-bb64-6336d4bcb1fb"), launch));
+        LaunchersController controller = new LaunchersController(_mockRepo.Object);
 
-            var controller = new LaunchersController(MockRepo.Object);
+        IActionResult result = await controller.PutAsync(new Guid("535c1a09-97c8-4f96-bb64-6336d4bcb1fb"), launch);
 
-            var result = await controller.PutAsync(new Guid("535c1a09-97c8-4f96-bb64-6336d4bcb1fb"), launch);
+        Assert.IsType<OkResult>(result);
 
-            var okResult = Assert.IsType<OkResult>(result);
+        Launch launchUpdated = _launchData.Get(new Guid("535c1a09-97c8-4f96-bb64-6336d4bcb1fb"));
 
-            var launchUpdated = LaunchData.Get(new Guid("535c1a09-97c8-4f96-bb64-6336d4bcb1fb"));
+        Assert.Equal("Lucas", launchUpdated.Name);
+        Assert.Equal(Import_Status.Published, launchUpdated.Status);
+    }
 
-            Assert.Equal("Lucas", launchUpdated.Name);
-            Assert.Equal(Import_Status.Published, launchUpdated.Status);
-        }
+    [Fact]
+    public async Task PutAsyncIdNotMatch()
+    {
+        Launch launch = _launchData.Get(new Guid("535c1a09-97c8-4f96-bb64-6336d4bcb1fb"));
 
-        [Fact]
-        public async Task PutAsyncIdNotMatch()
-        {
-            var launch = LaunchData.Get(new Guid("535c1a09-97c8-4f96-bb64-6336d4bcb1fb"));
+        _mockRepo.Setup(x => x.GetAsync(new Guid("535c1a09-97c8-4f96-bb64-6336d4bcb1fb")))
+                .ReturnsAsync(_launchData.Get(new Guid("535c1a09-97c8-4f96-bb64-6336d4bcb1fb")));
 
-            MockRepo.Setup(x => x.GetAsync(new Guid("535c1a09-97c8-4f96-bb64-6336d4bcb1fb")))
-                    .ReturnsAsync(LaunchData.Get(new Guid("535c1a09-97c8-4f96-bb64-6336d4bcb1fb")));
+        LaunchersController controller = new LaunchersController(_mockRepo.Object);
 
-            var controller = new LaunchersController(MockRepo.Object);
+        IActionResult result = await controller.PutAsync(new Guid("535c1a09-97c8-4f96-bb64-6336d4bcb1fa"), launch);
 
-            var result = await controller.PutAsync(new Guid("535c1a09-97c8-4f96-bb64-6336d4bcb1fa"), launch);
+        BadRequestObjectResult badRequestObjectResult = Assert.IsType<BadRequestObjectResult>(result);
+        Assert.Equal("The id does not match the object.", badRequestObjectResult.Value);
+    }
 
-            var badRequestObjectResult = Assert.IsType<BadRequestObjectResult>(result);
-            Assert.Equal("The id does not match the object.", badRequestObjectResult.Value);
-        }
+    [Fact]
+    public async Task PutAsyncDeleted()
+    {
+        Launch launch = _launchData.Get(new Guid("f8c9f344-a6df-4f30-873a-90fe3a7840b3"));
 
-        [Fact]
-        public async Task PutAsyncDeleted()
-        {
-            var launch = LaunchData.Get(new Guid("f8c9f344-a6df-4f30-873a-90fe3a7840b3"));
+        _mockRepo.Setup(x => x.PutAsync(new Guid("f8c9f344-a6df-4f30-873a-90fe3a7840b3"), launch))
+                .Returns(_launchData.Put(new Guid("f8c9f344-a6df-4f30-873a-90fe3a7840b3"), launch));
 
-            MockRepo.Setup(x => x.PutAsync(new Guid("f8c9f344-a6df-4f30-873a-90fe3a7840b3"), launch))
-                    .Returns(LaunchData.Put(new Guid("f8c9f344-a6df-4f30-873a-90fe3a7840b3"), launch));
+        LaunchersController controller = new LaunchersController(_mockRepo.Object);
 
-            var controller = new LaunchersController(MockRepo.Object);
+        IActionResult result = await controller.PutAsync(new Guid("f8c9f344-a6df-4f30-873a-90fe3a7840b3"), launch);
 
-            var result = await controller.PutAsync(new Guid("f8c9f344-a6df-4f30-873a-90fe3a7840b3"), launch);
+        BadRequestObjectResult badRequestObjectResult = Assert.IsType<BadRequestObjectResult>(result);
+        Assert.Equal("Deleted locally.", badRequestObjectResult.Value);
+    }
 
-            var badRequestObjectResult = Assert.IsType<BadRequestObjectResult>(result);
-            Assert.Equal("Deleted locally.", badRequestObjectResult.Value);
-        }
+    [Fact]
+    public async Task DeleteAsyncOk()
+    {
+        _mockRepo.Setup(x => x.GetAsync(new Guid("1b9e28d0-c531-44b0-9b37-244e62a6d3f4")))
+                .ReturnsAsync(_launchData.Get(new Guid("1b9e28d0-c531-44b0-9b37-244e62a6d3f4")));
 
-        [Fact]
-        public async Task DeleteAsyncOk()
-        {
-            MockRepo.Setup(x => x.GetAsync(new Guid("1b9e28d0-c531-44b0-9b37-244e62a6d3f4")))
-                    .ReturnsAsync(LaunchData.Get(new Guid("1b9e28d0-c531-44b0-9b37-244e62a6d3f4")));
+        _mockRepo.Setup(x => x.DeleteAsync(new Guid("1b9e28d0-c531-44b0-9b37-244e62a6d3f4")))
+                .Returns(_launchData.Delete(new Guid("1b9e28d0-c531-44b0-9b37-244e62a6d3f4")));
 
-            MockRepo.Setup(x => x.DeleteAsync(new Guid("1b9e28d0-c531-44b0-9b37-244e62a6d3f4")))
-                    .Returns(LaunchData.Delete(new Guid("1b9e28d0-c531-44b0-9b37-244e62a6d3f4")));
+        LaunchersController controller = new LaunchersController(_mockRepo.Object);
 
-            var controller = new LaunchersController(MockRepo.Object);
+        IActionResult result = await controller.DeleteAsync(new Guid("1b9e28d0-c531-44b0-9b37-244e62a6d3f4"));
 
-            var result = await controller.DeleteAsync(new Guid("1b9e28d0-c531-44b0-9b37-244e62a6d3f4"));
+        OkResult okResult = Assert.IsType<OkResult>(result);
 
-            var okResult = Assert.IsType<OkResult>(result);
-
-            var launchDeleted = LaunchData.Get(new Guid("1b9e28d0-c531-44b0-9b37-244e62a6d3f4"));
-            Assert.Equal(Import_Status.Trash, launchDeleted.Status);
-        }
+        Launch launchDeleted = _launchData.Get(new Guid("1b9e28d0-c531-44b0-9b37-244e62a6d3f4"));
+        Assert.Equal(Import_Status.Trash, launchDeleted.Status);
     }
 }

@@ -1,8 +1,8 @@
 global using Xunit;
+global using Back_End_Challenge_20210221.Application.Controllers;
 global using Back_End_Challenge_20210221.Domain.Data;
 global using Back_End_Challenge_20210221.Domain.Models;
 global using Back_End_Challenge_20210221.Domain.Models.Enums;
-global using Back_End_Challenge_20210221.Infra.Controllers;
 global using Back_End_Challenge_20210221.Infra.Data;
 global using Microsoft.AspNetCore.Mvc;
 global using Moq;
