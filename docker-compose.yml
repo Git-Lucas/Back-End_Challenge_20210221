@@ -2,20 +2,20 @@ version: '3.4'
 
 services:
   back-end_challenge_20210221:
-    container_name: app
-    image: ${DOCKER_REGISTRY-}dockerlucasoliveira/backendchallenge20210221:1.0
+    container_name: Api
+    image: ${DOCKER_REGISTRY-}dockerlucasoliveira/backendchallenge20210221:latest
     build:
       context: .
       dockerfile: Back-End_Challenge_20210221/Dockerfile
     ports:
-      - "5211:80"
+      - "8080:8080"
     depends_on:
       - db
     entrypoint: ["/bin/sh", "-c", "sleep 60 && dotnet Back-End_Challenge_20210221.dll"]
     restart: always
 
   db:
-    container_name: sqlserver
+    container_name: SqlServerDb
     image: "mcr.microsoft.com/mssql/server:2022-latest"
     environment:
       SA_PASSWORD: "BackEndChallenge@20210221"
