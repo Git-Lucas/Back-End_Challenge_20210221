@@ -139,6 +139,7 @@ public class LaunchDataSqlServer : ILaunchData
     {
         return await _context.Launchers
             .AsNoTracking()
+            .OrderBy(x => x.Id)
             .Where(x => x.Status != Import_Status.Trash)
             .Include(x => x.StatusLaunch)
             .Include(x => x.LaunchServiceProvider)

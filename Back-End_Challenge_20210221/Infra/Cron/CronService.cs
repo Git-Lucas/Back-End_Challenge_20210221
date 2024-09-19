@@ -11,7 +11,7 @@ public class CronService : IHostedService, IDisposable
     private readonly ILogger<CronService> _logger;
     private readonly IServiceProvider _serviceProvider;
     private Timer? _timer;
-    private readonly TimeSpan _importRange = TimeSpan.FromMinutes(1);
+    private readonly TimeSpan _importRange = TimeSpan.FromMinutes(5);
     private readonly int _importLimit = 2000;
     private readonly int _take = 100;
     private int _skip = 0;
@@ -31,7 +31,7 @@ public class CronService : IHostedService, IDisposable
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
-        _logger.LogInformation("StartAsync {UtcNow}", DateTime.UtcNow);
+        _logger.LogInformation("StartAsync {UtcNow}. Init in: {ImportRange}", DateTime.UtcNow, _importRange);
         _iterations = _importLimit / _take;
         _timer = new Timer(ImportData, null, _importRange, TimeSpan.FromDays(1));
         return Task.CompletedTask;
