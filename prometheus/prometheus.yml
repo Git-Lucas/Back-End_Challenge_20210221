@@ -1,0 +1,5 @@
+scrape_configs:
+  - job_name: Back-End_Challenge
+    static_configs:
+      - targets:
+        - back-end_challenge_20210221:8080

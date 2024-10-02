@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Prometheus;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 
@@ -31,6 +32,8 @@ builder.Services.AddAuthentication(x =>
         ValidateLifetime = true
     };
 });
+
+builder.Services.UseHttpClientMetrics();
 
 builder.Services.AddControllers();
 
@@ -79,13 +82,16 @@ using IServiceScope scope = app.Services.CreateScope();
 EfSqlServerAdapter context = scope.ServiceProvider.GetRequiredService<EfSqlServerAdapter>();
 if (context.Database.IsRelational())
 {
-    context.Database.Migrate();
+    await context.Database.MigrateAsync();
 }
 
 app.UseSwagger();
 app.UseSwaggerUI();
 
 app.UseAuthorization();
+
+app.UseMetricServer();
+app.UseHttpMetrics();
 
 app.MapControllers();
 
@@ -108,4 +114,4 @@ app.MapGet("validToken/", () =>
     return Results.Ok($"Bearer {strToken}");
 });
 
-app.Run();
+await app.RunAsync();
