@@ -83,6 +83,8 @@ No arquivo `docker-compose.yml`, foi configurado um serviço do Prometheus que co
 #### Arquivo de configuração (`prometheus/prometheus.yml`):
 O Prometheus coleta métricas da aplicação no endpoint `/metrics`.
 
+![](https://github.com/Git-Lucas/Back-End_Challenge_20210221/blob/master/imgs/Prometheus.png)
+
 ### Configuração Grafana
 O **Grafana** foi configurado para visualização das métricas coletadas pelo Prometheus. Dashboards pré-configurados foram adicionados para facilitar a visualização das principais métricas.
 
@@ -96,5 +98,4 @@ Acesse o Grafana através de `http://localhost:3000` e utilize as seguintes crede
 - **Usuário**: `admin`
 - **Senha**: `admin`
 
-![](https://github.com/Git-Lucas/Back-End_Challenge_20210221/blob/master/imgs/Prometheus.png)
 ![](https://github.com/Git-Lucas/Back-End_Challenge_20210221/blob/master/imgs/Grafana.png)
