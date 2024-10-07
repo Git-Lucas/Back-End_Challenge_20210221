@@ -20,9 +20,11 @@
 	```bash
    Bearer {token}
    ```
+   ![](https://github.com/Git-Lucas/Back-End_Challenge_20210221/blob/master/imgs/OpenAPI_2.png)
 
 
 # Aplicação
+![](https://github.com/Git-Lucas/Back-End_Challenge_20210221/blob/master/imgs/OpenAPI_1.png)
 ## Sistema CRON
 O sistema de atualização dos dados foi feito utilizando ferramentas nativas do .NET, que cria / atualiza a base existente, seguindo as seguintes regras:
 - Os dados são cadastrados com requisições paginadas e limitadas da API externa: 100 registros a cada 5 minutos;
@@ -48,8 +50,6 @@ Além destes, 2 campos adicionais eram criados para controle interno dos "launche
 ### Segurança
 Foi utilizado o JWT (Json Web Token), para realizar as autenticações das requisições à API de Launchers.
 
-![](https://github.com/Git-Lucas/Back-End_Challenge_20210221/blob/master/imgs/OpenAPI_2.png)
-
 ### Paginação
 
 ![](https://github.com/Git-Lucas/Back-End_Challenge_20210221/blob/master/imgs/OpenAPI_3.png)
@@ -58,13 +58,43 @@ Foi utilizado o JWT (Json Web Token), para realizar as autenticações das requisi
 
 ![](https://github.com/Git-Lucas/Back-End_Challenge_20210221/blob/master/imgs/OpenAPI_4.png)
 
-## Docker
-Aplicação e banco de dados rodando em Container Docker.
-
-![](https://github.com/Git-Lucas/Back-End_Challenge_20210221/blob/master/imgs/Docker_3.png)
-![](https://github.com/Git-Lucas/Back-End_Challenge_20210221/blob/master/imgs/Docker_4.png)
 
 ## Testes
 Um projeto "Test" foi adicionado com referência ao projeto principal, para adição do arquivo responsável pelo teste unitário do "LaunchersConttroller".
 
 ![](https://github.com/Git-Lucas/Back-End_Challenge_20210221/blob/master/imgs/Tests.png)
+
+
+## Docker
+Aplicação, banco de dados e ferramentas de observabilidade rodando em Container Docker.
+
+![](https://github.com/Git-Lucas/Back-End_Challenge_20210221/blob/master/imgs/Docker_1.png)
+![](https://github.com/Git-Lucas/Back-End_Challenge_20210221/blob/master/imgs/Docker_2.png)
+
+
+## Observabilidade
+A observabilidade foi adicionada à aplicação através da integração com **Prometheus** e **Grafana**. Com isso, é possível monitorar métricas da aplicação e visualizar gráficos em dashboards.
+
+### Configuração Prometheus
+O **Prometheus** foi adicionado à aplicação para coletar e expor métricas através do endpoint padrão `/metrics`.
+
+No arquivo `docker-compose.yml`, foi configurado um serviço do Prometheus que coleta as métricas da aplicação e as expõe para o Grafana.
+
+#### Arquivo de configuração (`prometheus/prometheus.yml`):
+O Prometheus coleta métricas da aplicação no endpoint `/metrics`.
+
+### Configuração Grafana
+O **Grafana** foi configurado para visualização das métricas coletadas pelo Prometheus. Dashboards pré-configurados foram adicionados para facilitar a visualização das principais métricas.
+
+#### Dashboards e Datasources
+- Os arquivos de provisionamento foram incluídos para configurar automaticamente as fontes de dados e dashboards no Grafana.
+- **Fonte de dados**: Prometheus.
+- **Porta do Grafana**: `3000`.
+
+Acesse o Grafana através de `http://localhost:3000` e utilize as seguintes credenciais padrão:
+
+- **Usuário**: `admin`
+- **Senha**: `admin`
+
+![](https://github.com/Git-Lucas/Back-End_Challenge_20210221/blob/master/imgs/Prometheus.png)
+![](https://github.com/Git-Lucas/Back-End_Challenge_20210221/blob/master/imgs/Grafana.png)
