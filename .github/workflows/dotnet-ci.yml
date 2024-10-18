@@ -39,3 +39,11 @@ jobs:
       with:
         username: dockerlucasoliveira
         password: ${{ secrets.PASSWORD_DOCKERHUB }}
+
+    - name: Build and push Docker images
+      uses: docker/build-push-action@v6.9.0
+      with:
+        context: ./Back-End_Challenge_20210221/
+        file: ./Back-End_Challenge_20210221/Dockerfile
+        push: true
+        tags: dockerlucasoliveira/backendchallenge20210221:latest
