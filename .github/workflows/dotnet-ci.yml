@@ -26,6 +26,7 @@ jobs:
       run: dotnet test Back-End_Challenge_20210221.sln --no-build --verbosity normal
 
   docker:
+    needs: tests
     runs-on: ubuntu-latest
     
     steps:
