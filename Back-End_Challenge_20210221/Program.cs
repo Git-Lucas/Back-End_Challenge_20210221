@@ -84,7 +84,7 @@ var app = builder.Build();
 var lifetime = app.Services.GetRequiredService<IHostApplicationLifetime>();
 lifetime.ApplicationStarted.Register(() =>
 {
-    Console.WriteLine($"Time (ms) to Startup Application: {Stopwatch.GetElapsedTime(startTime).TotalMilliseconds}");
+    Console.WriteLine($"Time (seconds) to Startup Application: {Stopwatch.GetElapsedTime(startTime).TotalSeconds}");
 });
 
 using IServiceScope scope = app.Services.CreateScope();
