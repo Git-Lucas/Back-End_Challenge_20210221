@@ -6,8 +6,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Prometheus;
+using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
+
+var startTime = Stopwatch.GetTimestamp();
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -77,6 +80,12 @@ builder.Services.AddSwaggerGen(x =>
 });
 
 var app = builder.Build();
+
+var lifetime = app.Services.GetRequiredService<IHostApplicationLifetime>();
+lifetime.ApplicationStarted.Register(() =>
+{
+    Console.WriteLine($"Time (ms) to Startup Application: {Stopwatch.GetElapsedTime(startTime).TotalMilliseconds}");
+});
 
 using IServiceScope scope = app.Services.CreateScope();
 EfSqlServerAdapter context = scope.ServiceProvider.GetRequiredService<EfSqlServerAdapter>();

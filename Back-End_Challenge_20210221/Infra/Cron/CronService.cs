@@ -31,7 +31,7 @@ public class CronService : IHostedService, IDisposable
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
-        _logger.LogInformation("StartAsync {UtcNow}. Init in: {ImportRange}", DateTime.UtcNow, _importRange);
+        _logger.LogInformation("StartAsync {UtcNow}. Init in {ImportRange} minutes", DateTime.UtcNow, _importRange.Minutes);
         _iterations = _importLimit / _take;
         _timer = new Timer(ImportData, null, _importRange, TimeSpan.FromDays(1));
         return Task.CompletedTask;
