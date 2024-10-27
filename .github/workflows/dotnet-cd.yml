@@ -20,7 +20,7 @@ jobs:
       run: |
           dotnet restore Back-End_Challenge_20210221.sln
           dotnet build Back-End_Challenge_20210221.sln -c Release --no-restore
-          dotnet publish Back-End_Challenge_20210221.sln -c Release --no-build --output ./publish
+          dotnet publish Back-End_Challenge_20210221.sln -c Release -o ./publish
 
     - name: Deploy to EC2
       uses: easingthemes/ssh-deploy@main
