@@ -14,11 +14,11 @@ var startTime = Stopwatch.GetTimestamp();
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Configuration.AddEnvironmentVariables();
+//builder.Configuration.AddEnvironmentVariables();
 
 builder.Logging.AddFilter("Microsoft.EntityFrameworkCore.Database.Command", LogLevel.Warning);
 
-var chave = Encoding.ASCII.GetBytes("4f7b17c4b5afe5d9527c74c49002c4d8a268f7e31d9b16357887b7556fbf199a");
+byte[] key = Encoding.ASCII.GetBytes("4f7b17c4b5afe5d9527c74c49002c4d8a268f7e31d9b16357887b7556fbf199a");
 builder.Services.AddAuthentication(x =>
 {
     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -31,7 +31,7 @@ builder.Services.AddAuthentication(x =>
     x.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(chave),
+        IssuerSigningKey = new SymmetricSecurityKey(key),
         ValidateIssuer = false,
         ValidateAudience = false,
         ValidateLifetime = true
