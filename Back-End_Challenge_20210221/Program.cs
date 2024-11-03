@@ -40,16 +40,16 @@ builder.Services.UseHttpClientMetrics();
 
 builder.Services.AddControllers();
 
-//if (builder.Environment.IsDevelopment())
-//{
+if (builder.Environment.IsDevelopment())
+{
     builder.Services.AddDbContext<EfSqlServerAdapter>(options =>
         options.UseInMemoryDatabase("BackEndChallengeDb"));
-//}
-//else
-//{
-//    builder.Services.AddDbContext<EfSqlServerAdapter>(options =>
-//        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-//}
+}
+else
+{
+    builder.Services.AddDbContext<EfSqlServerAdapter>(options =>
+        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+}
 
 builder.Services.AddScoped<ILaunchData, LaunchDataSqlServer>();
 builder.Services.AddHostedService<CronService>();
