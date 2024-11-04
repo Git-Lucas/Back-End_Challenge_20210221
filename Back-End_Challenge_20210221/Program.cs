@@ -14,7 +14,7 @@ var startTime = Stopwatch.GetTimestamp();
 
 var builder = WebApplication.CreateBuilder(args);
 
-//builder.Configuration.AddEnvironmentVariables();
+builder.Configuration.AddEnvironmentVariables();
 
 builder.Logging.AddFilter("Microsoft.EntityFrameworkCore.Database.Command", LogLevel.Warning);
 
