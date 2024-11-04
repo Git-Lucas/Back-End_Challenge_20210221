@@ -1,8 +1,8 @@
 name: .NET CD
 
-on:
-  push:
-    branches: [ "master" ]
+# on:
+#   push:
+#     branches: [ "master" ]
 
 jobs:
   ec2:
