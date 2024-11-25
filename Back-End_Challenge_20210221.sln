@@ -9,8 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Back-End_Challenge_20210221
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8A8C0E78-EA86-452F-B0E3-37AA3413EE8C}"
 	ProjectSection(SolutionItems) = preProject
-		.github\workflows\dotnet-cd.yml = .github\workflows\dotnet-cd.yml
+		.github\workflows\dotnet-cd-dockerHub.yml = .github\workflows\dotnet-cd-dockerHub.yml
 		.github\workflows\dotnet-ci.yml = .github\workflows\dotnet-ci.yml
+		.github\workflows\dotnet-cd-ec2.yml = .github\workflows\dotnet-cd-ec2.yml
 		readme.md = readme.md
 	EndProjectSection
 EndProject
