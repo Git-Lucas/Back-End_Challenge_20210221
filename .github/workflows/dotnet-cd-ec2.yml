@@ -1,4 +1,4 @@
-name: .NET CD
+name: .NET CD EC2
 
 on:
   push:
