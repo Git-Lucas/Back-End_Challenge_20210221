@@ -93,7 +93,14 @@ using IServiceScope scope = app.Services.CreateScope();
 EfSqlServerAdapter context = scope.ServiceProvider.GetRequiredService<EfSqlServerAdapter>();
 if (context.Database.IsRelational())
 {
-    await context.Database.MigrateAsync();
+    try
+    {
+        await context.Database.MigrateAsync();
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Connection String: {builder.Configuration.GetConnectionString("DefaultConnection")}{Environment.NewLine} Exception: {ex.Message}");
+    }
 }
 
 app.UseSwagger();
