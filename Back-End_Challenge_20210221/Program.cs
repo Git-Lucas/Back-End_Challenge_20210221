@@ -8,6 +8,7 @@ using Microsoft.OpenApi.Models;
 using Prometheus;
 using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 using System.Text;
 
 var startTime = Stopwatch.GetTimestamp();
@@ -93,14 +94,7 @@ using IServiceScope scope = app.Services.CreateScope();
 EfSqlServerAdapter context = scope.ServiceProvider.GetRequiredService<EfSqlServerAdapter>();
 if (context.Database.IsRelational())
 {
-    try
-    {
-        await context.Database.MigrateAsync();
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine($"Connection String: {builder.Configuration.GetConnectionString("DefaultConnection")}{Environment.NewLine} Exception: {ex.Message}");
-    }
+    await context.Database.MigrateAsync();
 }
 
 app.UseSwagger();
@@ -115,7 +109,8 @@ app.MapControllers();
 
 app.MapGet("/", () =>
 {
-    return Results.Ok("REST Back-end Challenge 20201209 Running");
+    string hostname = Dns.GetHostName();
+    return Results.Ok($"REST Back-end Challenge 20201209 Running on {hostname}");
 });
 app.MapGet("validToken/", () =>
 {
