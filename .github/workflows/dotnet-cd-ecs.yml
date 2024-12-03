@@ -5,7 +5,7 @@ on:
     branches: [ "master" ]
 
 jobs:
-  ec2:
+  ecs:
     runs-on: ubuntu-latest
 
     steps:
@@ -21,3 +21,20 @@ jobs:
     - name: Download task definition
       run: |
         aws ecs describe-task-definition --task-definition ${{ secrets.ECS_TASK_DEFINITION_NAME }} --query taskDefinition > task-definition.json
+
+    - name: Fill in the new image ID in the Amazon ECS task definition
+      id: task-def
+      uses: aws-actions/amazon-ecs-render-task-definition@v1
+      with:
+        task-definition: task-definition.json
+        container-name: Api
+        image: dockerlucasoliveira/backendchallenge20210221:latest
+        environment-variables: "ASPNETCORE_ENVIRONMENT=ECS"
+
+    - name: Deploy Amazon ECS task definition
+      uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+      with:
+        task-definition: ${{ steps.task-def.outputs.task-definition }}
+        service: ${{ secrets.ECS_SERVICE_NAME }}
+        cluster: ${{ secrets.ECS_CLUSTER_NAME }}
+        wait-for-service-stability: true
