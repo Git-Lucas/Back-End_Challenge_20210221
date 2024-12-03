@@ -1,8 +1,10 @@
 name: .NET CD ECS
 
 on:
-  push:
-    branches: [ "master" ]
+  workflow_run:
+    workflows: [".NET CD DOCKER HUB"]
+    types:
+      - completed
 
 jobs:
   ecs:
@@ -18,11 +20,11 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: us-east-1
 
-    - name: Download task definition
+    - name: Download Amazon ECS task definition
       run: |
         aws ecs describe-task-definition --task-definition ${{ secrets.ECS_TASK_DEFINITION_NAME }} --query taskDefinition > task-definition.json
 
-    - name: Fill in the new image ID in the Amazon ECS task definition
+    - name: Set application image URI in the task definition
       id: task-def
       uses: aws-actions/amazon-ecs-render-task-definition@v1
       with:
