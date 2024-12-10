@@ -21,8 +21,7 @@ jobs:
         aws-region: us-east-1
 
     - name: Download Amazon ECS task definition
-      run: |
-        aws ecs describe-task-definition --task-definition ${{ secrets.ECS_TASK_DEFINITION_NAME }} --query taskDefinition > task-definition.json
+      run: aws ecs describe-task-definition --task-definition ${{ secrets.ECS_TASK_DEFINITION_NAME }} --query taskDefinition > task-definition.json
 
     - name: Copy task definition
       run: cp task-definition.json task-definition.json.old
@@ -44,9 +43,11 @@ jobs:
         cluster: ${{ secrets.ECS_CLUSTER_NAME }}
         wait-for-service-stability: true
 
-    - name: Requisição
+    - name: Request
       continue-on-error: true
-      run: echo "REQUEST=0" >> $GITHUB_ENV ; sleep 30s ; wget ${{ secrets.ECS_LOAD_BALANCER_DNS }} || echo "REQUEST=1" >> $GITHUB_ENV        
+      run: |
+        echo "REQUEST=0" >> $GITHUB_ENV
+        wget ${{ secrets.ECS_LOAD_BALANCER_DNS }}endpointNotFound || echo "REQUEST=1" >> $GITHUB_ENV        
     
     - name: Rollback Amazon ECS task definition
       if: ${{ env.REQUEST != 0 }}
