@@ -23,15 +23,15 @@ jobs:
     - name: Initialize Terraform
       run: terraform -chdir=Terraform_Ansible_BackEndChallenge init
 
-    - name: Destroy Terraform
-      run: terraform -chdir=Terraform_Ansible_BackEndChallenge destroy
-
     - name: Download Terraform State
       uses: actions/download-artifact@v4.1.8
       with:
         name: terraform-state
         path: Terraform_Ansible_BackEndChallenge/
       continue-on-error: true
+
+    - name: Destroy Terraform
+      run: terraform -chdir=Terraform_Ansible_BackEndChallenge destroy
 
     - name: Apply Terraform
       run: terraform -chdir=Terraform_Ansible_BackEndChallenge apply -auto-approve
