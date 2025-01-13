@@ -30,6 +30,6 @@ jobs:
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
     - name: Deploy with Ansible
-      run: ansible-playbook -i $(terraform output -raw instance_public_ip), ansible/deploy.yml
+      run: ansible-playbook -i $(terraform -chdir=Terraform_Ansible_BackEndChallenge output -raw instance_public_ip), ansible/deploy.yml
       env:
         ANSIBLE_HOST_KEY_CHECKING: "false"
