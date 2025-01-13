@@ -2,7 +2,7 @@ name: .NET CD EC2
 
 on:
   push:
-    branches: [ "disable-temporarily" ]
+    branches: [ "master" ]
 
 jobs:
   ec2:
