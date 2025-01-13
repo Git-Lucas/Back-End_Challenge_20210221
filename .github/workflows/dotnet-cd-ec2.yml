@@ -21,10 +21,10 @@ jobs:
         terraform_version: 1.10.4
 
     - name: Initialize Terraform
-      run: terraform init
+      run: terraform -chdir=Terraform_Ansible_BackEndChallenge init
 
     - name: Apply Terraform
-      run: terraform apply -auto-approve
+      run: terraform -chdir=Terraform_Ansible_BackEndChallenge apply -auto-approve
       env: 
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
