@@ -28,7 +28,11 @@ jobs:
       run: terraform -chdir=Terraform_Ansible_BackEndChallenge init
 
     - name: Apply Terraform
-      run: terraform -chdir=Terraform_Ansible_BackEndChallenge apply -auto-approve
+      id: terraform_apply
+      run: |
+        terraform -chdir=Terraform_Ansible_BackEndChallenge apply -auto-approve
+        echo "instance_ip=$(terraform -chdir=Terraform_Ansible_BackEndChallenge output -raw instance_public_ip)" >> $GITHUB_ENV
+        echo "instance_ip=$(terraform -chdir=Terraform_Ansible_BackEndChallenge output -raw instance_public_ip)" >> $GITHUB_OUTPUT
 
     - name: Create SSH directory
       run: mkdir -p ~/.ssh
@@ -39,7 +43,7 @@ jobs:
         chmod 600 ~/.ssh/id_rsa
 
     - name: Deploy with Ansible
-      run: ansible-playbook -i "$(terraform -chdir=Terraform_Ansible_BackEndChallenge output -raw instance_public_ip)," -u ubuntu Terraform_Ansible_BackEndChallenge/playbook.yml --private-key ~/.ssh/id_rsa
+      run: ansible-playbook -i "${{ steps.terraform_apply.outputs.instance_ip }}," -u ubuntu Terraform_Ansible_BackEndChallenge/playbook.yml --private-key ~/.ssh/id_rsa
       env:
         ANSIBLE_HOST_KEY_CHECKING: "false"
 
