@@ -31,7 +31,9 @@ jobs:
       run: terraform -chdir=Terraform_Ansible_BackEndChallenge apply -auto-approve
 
     - name: Deploy with Ansible
-      run: ansible-playbook -i "$(terraform -chdir=Terraform_Ansible_BackEndChallenge output -raw instance_public_ip)," -u ubuntu Terraform_Ansible_BackEndChallenge/playbook.yml --private-key Terraform_Ansible_BackEndChallenge/back-end_challenge_20210221.pem
+      run: |
+        INSTANCE_IP=$(terraform -chdir=Terraform_Ansible_BackEndChallenge output -raw instance_public_ip)
+        ansible-playbook -i "$INSTANCE_IP," -u ubuntu Terraform_Ansible_BackEndChallenge/playbook.yml --private-key Terraform_Ansible_BackEndChallenge/back-end_challenge_20210221.pem
       env:
         ANSIBLE_HOST_KEY_CHECKING: "false"
 
