@@ -29,7 +29,9 @@ jobs:
 
     - name: Apply Terraform
       id: terraform_apply
-      run: echo "$(terraform -chdir=Terraform_Ansible_BackEndChallenge apply -auto-approve)"
+      run: |
+        terraform -chdir=Terraform_Ansible_BackEndChallenge apply -auto-approve
+        echo "$(terraform -chdir=Terraform_Ansible_BackEndChallenge output -raw instance_public_ip)"
 
     - name: Create SSH directory
       run: mkdir -p ~/.ssh
