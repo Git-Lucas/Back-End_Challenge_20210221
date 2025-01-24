@@ -27,13 +27,13 @@ jobs:
     - name: Initialize Terraform
       run: terraform -chdir=Terraform_Ansible_BackEndChallenge init
 
-    # - name: Destroy Terraform
-    #   run: terraform -chdir=Terraform_Ansible_BackEndChallenge destroy -auto-approve
-
     - name: Apply Terraform
       run: terraform -chdir=Terraform_Ansible_BackEndChallenge apply -auto-approve
 
     - name: Deploy with Ansible
-      run: ansible-playbook -i "$(terraform -chdir=Terraform_Ansible_BackEndChallenge output -raw instance_public_ip)," Terraform_Ansible_BackEndChallenge/playbook.yml
+      run: ansible-playbook -i "$(terraform -chdir=Terraform_Ansible_BackEndChallenge output -raw instance_public_ip)," Terraform_Ansible_BackEndChallenge/playbook.yml --private-key Terraform_Ansible_BackEndChallenge/back-end_challenge_20210221.pem
       env:
         ANSIBLE_HOST_KEY_CHECKING: "false"
+
+    # - name: Destroy Terraform
+    #   run: terraform -chdir=Terraform_Ansible_BackEndChallenge destroy -auto-approve
