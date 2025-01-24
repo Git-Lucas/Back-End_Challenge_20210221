@@ -34,6 +34,6 @@ jobs:
       run: terraform -chdir=Terraform_Ansible_BackEndChallenge apply -auto-approve
 
     - name: Deploy with Ansible
-      run: ansible-playbook -i "$(terraform -chdir=Terraform_Ansible_BackEndChallenge output -raw instance_public_ip)," ansible/deploy.yml
+      run: ansible-playbook -i "$(terraform -chdir=Terraform_Ansible_BackEndChallenge output -raw instance_public_ip)," Terraform_Ansible_BackEndChallenge/playbook.yml
       env:
         ANSIBLE_HOST_KEY_CHECKING: "false"
