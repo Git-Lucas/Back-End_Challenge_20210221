@@ -30,8 +30,16 @@ jobs:
     - name: Apply Terraform
       run: terraform -chdir=Terraform_Ansible_BackEndChallenge apply -auto-approve
 
+    - name: Create SSH directory
+      run: mkdir -p ~/.ssh
+
+    - name: Add SSH private key
+      run: |
+        echo "${{ secrets.AWS_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+
     - name: Deploy with Ansible
-      run: ansible-playbook -i 52.90.233.49, -u ubuntu Terraform_Ansible_BackEndChallenge/playbook.yml
+      run: ansible-playbook -i 52.90.233.49, -u ubuntu Terraform_Ansible_BackEndChallenge/playbook.yml --private-key ~/.ssh/id_rsa
       env:
         ANSIBLE_HOST_KEY_CHECKING: "false"
 
