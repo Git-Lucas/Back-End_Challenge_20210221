@@ -46,5 +46,5 @@ jobs:
       env:
         ANSIBLE_HOST_KEY_CHECKING: "false"
 
-    - name: Destroy Terraform
-      run: terraform -chdir=Terraform_Ansible_BackEndChallenge destroy -auto-approve
+    # - name: Destroy Terraform
+    #   run: terraform -chdir=Terraform_Ansible_BackEndChallenge destroy -auto-approve
