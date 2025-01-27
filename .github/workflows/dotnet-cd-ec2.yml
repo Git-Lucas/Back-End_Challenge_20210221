@@ -30,6 +30,11 @@ jobs:
     - name: Clone Terraform and Ansible Repository
       run: git clone https://github.com/Git-Lucas/Terraform_Ansible_BackEndChallenge.git
 
+    - name: Prepare files for Ansible
+      run: |
+          mkdir -p Terraform_Ansible_BackEndChallenge/files
+          cp -r ./publish Terraform_Ansible_BackEndChallenge/files/
+
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v2.0.3
       with:
