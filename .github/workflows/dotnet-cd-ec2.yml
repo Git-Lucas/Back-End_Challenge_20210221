@@ -33,6 +33,18 @@ jobs:
         terraform -chdir=Terraform_Ansible_BackEndChallenge apply -auto-approve
         echo "$(terraform -chdir=Terraform_Ansible_BackEndChallenge output -raw instance_public_ip)"
 
+    - name: Wait for EC2 health check
+      run: |
+        INSTANCE_IP="${{ steps.terraform_apply.outputs.stdout }}"
+        echo "Waiting for EC2 instance $INSTANCE_IP to pass health checks..."
+        for i in {1..30}; do
+          nc -zv $INSTANCE_IP 22 && echo "Instance is healthy and SSH is available!" && exit 0
+          echo "Waiting for instance to be ready... Retry $i of 30"
+          sleep 10
+        done
+        echo "EC2 instance did not pass health check in time." >&2
+        exit 1
+
     - name: Create SSH directory
       run: mkdir -p ~/.ssh
 
@@ -46,5 +58,5 @@ jobs:
       env:
         ANSIBLE_HOST_KEY_CHECKING: "false"
 
-    # - name: Destroy Terraform
-    #   run: terraform -chdir=Terraform_Ansible_BackEndChallenge destroy -auto-approve
+    - name: Destroy Terraform
+      run: terraform -chdir=Terraform_Ansible_BackEndChallenge destroy -auto-approve
