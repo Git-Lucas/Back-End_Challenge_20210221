@@ -16,6 +16,17 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+    
+    - name: Build and Publish
+      run: |
+          dotnet restore Back-End_Challenge_20210221.sln
+          dotnet build Back-End_Challenge_20210221.sln -c Release --no-restore
+          dotnet publish Back-End_Challenge_20210221.sln -c Release -o ./publish
+
     - name: Clone Terraform and Ansible Repository
       run: git clone https://github.com/Git-Lucas/Terraform_Ansible_BackEndChallenge.git
 
@@ -58,5 +69,5 @@ jobs:
       env:
         ANSIBLE_HOST_KEY_CHECKING: "false"
 
-    - name: Destroy Terraform
-      run: terraform -chdir=Terraform_Ansible_BackEndChallenge destroy -auto-approve
+    # - name: Destroy Terraform
+    #   run: terraform -chdir=Terraform_Ansible_BackEndChallenge destroy -auto-approve
