@@ -30,11 +30,6 @@ jobs:
     - name: Clone Terraform and Ansible Repository
       run: git clone https://github.com/Git-Lucas/Terraform_Ansible_BackEndChallenge.git
 
-    - name: Prepare files for Ansible
-      run: |
-          mkdir -p Terraform_Ansible_BackEndChallenge/files
-          cp -r ./publish Terraform_Ansible_BackEndChallenge/files/
-
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v2.0.3
       with:
@@ -69,10 +64,10 @@ jobs:
         echo "${{ secrets.AWS_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
 
-    - name: Deploy with Ansible
-      run: ansible-playbook -i "${{ steps.terraform_apply.outputs.stdout }}," -u ubuntu Terraform_Ansible_BackEndChallenge/playbook.yml --private-key ~/.ssh/id_rsa
-      env:
-        ANSIBLE_HOST_KEY_CHECKING: "false"
+    # - name: Deploy with Ansible
+    #   run: ansible-playbook -i "${{ steps.terraform_apply.outputs.stdout }}," -u ubuntu Terraform_Ansible_BackEndChallenge/playbook.yml --private-key ~/.ssh/id_rsa
+    #   env:
+    #     ANSIBLE_HOST_KEY_CHECKING: "false"
 
-    # - name: Destroy Terraform
-    #   run: terraform -chdir=Terraform_Ansible_BackEndChallenge destroy -auto-approve
+    - name: Destroy Terraform
+      run: terraform -chdir=Terraform_Ansible_BackEndChallenge destroy -auto-approve
