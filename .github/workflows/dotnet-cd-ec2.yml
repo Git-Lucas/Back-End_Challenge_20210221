@@ -65,7 +65,13 @@ jobs:
         chmod 600 ~/.ssh/id_rsa
 
     - name: Deploy with Ansible
-      run: ansible-playbook -i "${{ steps.terraform_apply.outputs.stdout }}," -u ubuntu Terraform_Ansible_BackEndChallenge/playbook.yml --private-key ~/.ssh/id_rsa
+      run: | 
+        ansible-playbook \
+            -i "${{ steps.terraform_apply.outputs.stdout }}," \
+            -u ubuntu \
+            --private-key ~/.ssh/id_rsa \
+            Terraform_Ansible_BackEndChallenge/playbooks/configure-nginx.yml \
+            Terraform_Ansible_BackEndChallenge/playbooks/deploy-dotnet.yml
       env:
         ANSIBLE_HOST_KEY_CHECKING: "false"
 
