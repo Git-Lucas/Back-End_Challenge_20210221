@@ -43,7 +43,7 @@ jobs:
       run: |
         terraform -chdir=Terraform_Ansible_BackEndChallenge apply -auto-approve
 
-        echo "INSTANCE_PUBLIC_IP=$(terraform -chdir=Terraform_Ansible_BackEndChallenge output -raw instance_public_ip)"
+        echo "INSTANCE_PUBLIC_IP=$(terraform -chdir=Terraform_Ansible_BackEndChallenge output -raw instance_public_ip)\n" >> $GITHUB_OUTPUT
         # echo "RDS_ADDRESS=$(terraform output -raw rds_address)"
         # echo "RDS_USERNAME=$(terraform output -raw rds_username)"
         # echo "RDS_PASSWORD=$(terraform output -raw rds_password)"
