@@ -42,10 +42,11 @@ jobs:
       id: terraform_apply
       run: |
         terraform -chdir=Terraform_Ansible_BackEndChallenge apply -auto-approve
-        echo "INSTANCE_PUBLIC_IP=$(terraform -chdir=Terraform_Ansible_BackEndChallenge output -raw instance_public_ip)" >> $GITHUB_ENV
-        echo "RDS_ENDPOINT=$(terraform output -raw rds_endpoint)" >> $GITHUB_ENV
-        echo "RDS_USERNAME=$(terraform output -raw rds_username)" >> $GITHUB_ENV
-        echo "RDS_PASSWORD=$(terraform output -raw rds_password)" >> $GITHUB_ENV
+
+        printf "INSTANCE_PUBLIC_IP=%s\n" "$(terraform -chdir=Terraform_Ansible_BackEndChallenge output -raw instance_public_ip)" >> $GITHUB_ENV
+        printf "RDS_ENDPOINT=%s\n" "$(terraform output -raw rds_endpoint)" >> $GITHUB_ENV
+        printf "RDS_USERNAME=%s\n" "$(terraform output -raw rds_username)" >> $GITHUB_ENV
+        printf "RDS_PASSWORD=%s\n" "$(terraform output -raw rds_password)" >> $GITHUB_ENV
 
     - name: Wait for EC2 health check
       run: |
