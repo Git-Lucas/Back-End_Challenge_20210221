@@ -43,10 +43,10 @@ jobs:
       run: |
         terraform -chdir=Terraform_Ansible_BackEndChallenge apply -auto-approve
 
-        echo "INSTANCE_PUBLIC_IP=$(terraform -chdir=Terraform_Ansible_BackEndChallenge output -raw instance_public_ip)\n" >> $GITHUB_OUTPUT
-        # echo "RDS_ADDRESS=$(terraform output -raw rds_address)"
-        # echo "RDS_USERNAME=$(terraform output -raw rds_username)"
-        # echo "RDS_PASSWORD=$(terraform output -raw rds_password)"
+        echo "INSTANCE_PUBLIC_IP=$(terraform -chdir=Terraform_Ansible_BackEndChallenge output -raw instance_public_ip)" >> "$GITHUB_OUTPUT"
+        # echo "RDS_ADDRESS=$(terraform output -raw rds_address)" >> $GITHUB_ENV
+        # echo "RDS_USERNAME=$(terraform output -raw rds_username)" >> $GITHUB_ENV
+        # echo "RDS_PASSWORD=$(terraform output -raw rds_password)" >> $GITHUB_ENV
 
     - name: Wait for EC2 health check
       run: |
@@ -71,7 +71,7 @@ jobs:
     - name: Deploy with Ansible
       run: | 
         ansible-playbook \
-            -i "${{ env.INSTANCE_PUBLIC_IP }}," \
+            -i "${{ steps.terraform_apply.outputs.INSTANCE_PUBLIC_IP }}," \
             -u ubuntu \
             --private-key ~/.ssh/id_rsa \
             Terraform_Ansible_BackEndChallenge/playbooks/configure-nginx.yml \
