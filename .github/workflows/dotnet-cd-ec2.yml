@@ -41,11 +41,13 @@ jobs:
     - name: Apply Terraform
       id: terraform_apply
       run: |
-        terraform -chdir=Terraform_Ansible_BackEndChallenge apply -auto-approve
+        cd Terraform_Ansible_BackEndChallenge
+        
+        terraform apply -auto-approve
 
-        output_json=$(terraform -chdir=Terraform_Ansible_BackEndChallenge output -json)
+        output_json=$(terraform output -json)
 
-        echo "instance_public_ip=$(echo $output_json | jq -r '.instance_public_ip.value')" >> $GITHUB_OUTPUT
+        echo "instance_public_ip=$(echo "$output_json" | jq -r '.instance_public_ip.value')" >> $GITHUB_OUTPUT
         # echo "rds_address=$(terraform output -raw rds_address)" >> "$GITHUB_OUTPUT"
         # echo "rds_username=$(terraform output -raw rds_username)" >> "$GITHUB_OUTPUT"
         # echo "rds_password=$(terraform output -raw rds_password)" >> "$GITHUB_OUTPUT"
