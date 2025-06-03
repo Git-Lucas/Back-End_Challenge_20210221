@@ -40,11 +40,15 @@ jobs:
 
     - name: Apply Terraform
       id: terraform_apply
-      run: terraform -chdir=Terraform_Ansible_BackEndChallenge apply -auto-approve
+      run: |
+        terraform -chdir=Terraform_Ansible_BackEndChallenge apply -auto-approve
+
+        ip=$(terraform -chdir=Terraform_Ansible_BackEndChallenge output -raw instance_public_ip)
+        echo "instance_ip=$ip" >> $GITHUB_OUTPUT
 
     - name: Wait for EC2 health check
       run: |
-        INSTANCE_IP="$(terraform -chdir=Terraform_Ansible_BackEndChallenge output -raw instance_public_ip)"
+        INSTANCE_IP="${{ steps.terraform_apply.outputs.instance_ip }}"
         echo "Waiting for EC2 instance $INSTANCE_IP to pass health checks..."
         for i in {1..30}; do
           nc -zv $INSTANCE_IP 22 && echo "Instance is healthy and SSH is available!" && exit 0
