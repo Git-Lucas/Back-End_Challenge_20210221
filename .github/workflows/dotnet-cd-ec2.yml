@@ -66,12 +66,17 @@ jobs:
 
     - name: Deploy with Ansible
       run: | 
+        RDS_ADDRESS="${{ fromJSON(steps.terraform_apply.outputs.stdout).rds_address.value }}"
+        RDS_USERNAME="${{ fromJSON(steps.terraform_apply.outputs.stdout).rds_username.value }}"
+        RDS_PASSWORD="${{ fromJSON(steps.terraform_apply.outputs.stdout).rds_password.value }}"
+
         ansible-playbook \
             -i "${{ fromJSON(steps.terraform_apply.outputs.stdout).instance_public_ip.value }}," \
             -u ubuntu \
             --private-key ~/.ssh/id_rsa \
             Terraform_Ansible_BackEndChallenge/playbooks/configure-nginx.yml \
-            Terraform_Ansible_BackEndChallenge/playbooks/deploy-dotnet.yml
+            Terraform_Ansible_BackEndChallenge/playbooks/deploy-dotnet.yml \
+            --extra-vars "rds_address=$RDS_ADDRESS rds_username=$RDS_USERNAME rds_password=$RDS_PASSWORD"
       env:
         ANSIBLE_HOST_KEY_CHECKING: "false"
 
