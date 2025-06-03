@@ -43,8 +43,8 @@ jobs:
       run: |
         terraform -chdir=Terraform_Ansible_BackEndChallenge apply -auto-approve
 
-        ip=$(terraform -chdir=Terraform_Ansible_BackEndChallenge output -raw instance_public_ip)
-        echo "instance_ip=$ip" >> $GITHUB_OUTPUT
+        ip=$(terraform -chdir=Terraform_Ansible_BackEndChallenge output -raw instance_public_ip | tr -d '\r')
+        printf "instance_ip=%s\n" "$ip" >> $GITHUB_OUTPUT
 
     - name: Wait for EC2 health check
       run: |
